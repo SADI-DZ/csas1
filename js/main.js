@@ -113,40 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /* Fixed: 6 */
 });
 
-const defaultHtmlTemplate = `<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>تجربتي</title>
-  </head>
-  <body>
-    <div class="card">
-      <h1>مرحبا بك في المخبر</h1>
-      <p>جرّب HTML + CSS + JavaScript معاً.</p>
-      <button id="btn">اضغطني</button>
-      <p class="hint">افتح ورشة JavaScript لإضافة تفاعل.</p>
-    </div>
-  </body>
-</html>`;
 
-const defaultCssTemplate = `:root { color-scheme: light; }
-body { font-family: Tahoma, sans-serif; padding: 22px; background: #f8fafc; color: #0f172a; }
-.card { max-width: 720px; margin: 0 auto; background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 18px 18px 14px; box-shadow: 0 10px 25px rgba(2, 6, 23, 0.08); }
-h1 { margin: 0 0 8px; color: #4f46e5; }
-p { margin: 0 0 10px; color: #334155; line-height: 1.8; }
-.hint { color: #64748b; font-size: 14px; }
-button { border: none; background: linear-gradient(135deg, #4f46e5, #06b6d4); color: white; padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 700; }
-button:hover { filter: brightness(1.04); transform: translateY(-1px); }`;
-
-const defaultJsTemplate = `const btn = document.getElementById('btn');
-if (btn) {
-  btn.addEventListener('click', () => {
-    btn.textContent = 'تم!';
-    btn.style.transform = 'scale(1.03)';
-    setTimeout(() => (btn.style.transform = ''), 150);
-  });
-}`;
 
 function initTheme() {
     const savedTheme = localStorage.getItem('theme') || 'light';
