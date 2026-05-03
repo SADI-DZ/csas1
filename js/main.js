@@ -187,7 +187,7 @@ function inferDifficulty(item) {
 // ============================================
 function toggleTheme() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    
+
     if (isDark) {
         document.documentElement.removeAttribute('data-theme');
         localStorage.setItem('theme', 'light');
@@ -220,11 +220,11 @@ function updateThemeAriaLabel() {
 function toggleFontSize() {
     const currentSize = localStorage.getItem('fontSize') || 'medium';
     let newSize;
-    
+
     if (currentSize === 'small') newSize = 'medium';
     else if (currentSize === 'medium') newSize = 'large';
     else newSize = 'small';
-    
+
     document.documentElement.classList.remove('font-small', 'font-medium', 'font-large');
     document.documentElement.classList.add(`font-${newSize}`);
     localStorage.setItem('fontSize', newSize);
@@ -235,19 +235,19 @@ function toggleFontSize() {
 // ============================================
 function renderModules() {
     if (!elements.modulesGrid) return;
-    
+
     // Use DocumentFragment for batch DOM insertion
     const fragment = document.createDocumentFragment();
-    
+
     modules.forEach((mod) => {
         const moduleItems = state.allData.filter(item => item.module === mod.id);
         const completedInModule = moduleItems.filter(item => state.completedItems.includes(item.id)).length;
         const progress = moduleItems.length > 0 ? Math.round((completedInModule / moduleItems.length) * 100) : 0;
-        
+
         const card = document.createElement('div');
         card.className = `module-card ${mod.moduleClass}`;
         card.onclick = () => selectModule(mod.id);
-        
+
         card.innerHTML = `
             <div class="module-icon">
                 <i class="ph ${mod.icon}"></i>
@@ -275,7 +275,7 @@ function renderModules() {
         card.dataset.moduleId = mod.id;
         fragment.appendChild(card);
     });
-    
+
     elements.modulesGrid.innerHTML = '';
     elements.modulesGrid.appendChild(fragment);
 
@@ -294,24 +294,24 @@ function selectModule(moduleId) {
     sessionStorage.setItem('lastModule', moduleId);
     if (elements.searchInput) sessionStorage.setItem('lastSearch', elements.searchInput.value || '');
     sessionStorage.setItem('lastScrollY', String(window.scrollY));
-    
+
     // Update UI
     if (elements.modulesSection) elements.modulesSection.style.display = 'none';
     if (elements.mainContent) elements.mainContent.style.display = 'grid';
     if (elements.navBackBtn) elements.navBackBtn.style.display = 'inline-flex';
-    
+
     // Update title
     const module = modules.find(m => m.id === moduleId);
     if (elements.moduleTitle && module) {
         elements.moduleTitle.innerHTML = `<i class="ph ${module.icon}"></i><span>${module.name}</span>`;
     }
-    
+
     // Update progress for this module
     updateModuleProgress();
-    
+
     // Render content
     filterData();
-    
+
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
     /* Fixed: 6 */
@@ -320,15 +320,15 @@ function selectModule(moduleId) {
 function showModulesView() {
     state.view = 'modules';
     state.currentModule = null;
-    
+
     // Update UI
     if (elements.modulesSection) elements.modulesSection.style.display = 'block';
     if (elements.mainContent) elements.mainContent.style.display = 'none';
     if (elements.navBackBtn) elements.navBackBtn.style.display = 'none';
-    
+
     // Refresh modules
     renderModules();
-    
+
     const lastScrollY = sessionStorage.getItem('lastScrollY');
     if (lastScrollY !== null) {
         window.scrollTo({ top: Number(lastScrollY) || 0, behavior: 'smooth' });
@@ -341,12 +341,12 @@ function showModulesView() {
 
 function updateModuleProgress() {
     if (!state.currentModule) return;
-    
+
     const moduleItems = state.allData.filter(item => item.module === state.currentModule);
     const total = moduleItems.length;
     const completed = moduleItems.filter(item => state.completedItems.includes(item.id)).length;
     const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
-    
+
     if (elements.completedCount) elements.completedCount.textContent = completed;
     if (elements.totalCount) elements.totalCount.textContent = total;
     if (elements.progressBarFill) elements.progressBarFill.style.width = `${percentage}%`;
@@ -360,23 +360,23 @@ function initEventListeners() {
     elements.themeToggle?.addEventListener('click', toggleTheme);
     elements.fontToggle?.addEventListener('click', toggleFontSize);
     elements.navBackBtn?.addEventListener('click', window.showModulesView);
-    
+
     // Event delegation for content grid and modules grid
     const mainEl = elements.contentGrid || elements.modulesGrid;
     if (mainEl) {
         mainEl.addEventListener('click', handleGridClick);
     }
-    
+
     elements.searchInput?.addEventListener('input', () => {
         clearTimeout(state.searchDebounceTimer);
         state.searchDebounceTimer = setTimeout(filterData, 300);
     });
-    
+
     elements.searchBtn?.addEventListener('click', filterData);
-    
+
     filters.type.forEach(radio => radio.addEventListener('change', filterData));
     elements.resetFiltersBtn?.addEventListener('click', resetFilters);
-    
+
     initMobileNav();
 }
 
@@ -664,7 +664,7 @@ function handleHtmlEditorKeydown(e) {
         // إذا كان السطر ينتهي بوسم فتح، أضف مسافة بادئة إضافية
         if (currentLine.trim().endsWith('>') && !currentLine.trim().match(/<\/[^>]+>$/) && !currentLine.trim().endsWith('/>')) {
             indentation += '  ';
-            
+
             // إضافة سطر جديد آخر للإغلاق إذا كان المؤشر بين وسمين
             if (afterCursor.trim().startsWith('</')) {
                 const insertion = '\n' + indentation;
@@ -712,7 +712,7 @@ function handleHtmlEditorKeydown(e) {
 function handleGridClick(e) {
     const target = e.target.closest('[data-action]') || e.target.closest('.module-card');
     if (!target) return;
-    
+
     if (target.dataset.action === 'open' && target.dataset.id) {
         openModal(parseInt(target.dataset.id));
     } else if (target.dataset.moduleId) {
@@ -722,25 +722,25 @@ function handleGridClick(e) {
 
 function initMobileNav() {
     if (!elements.navToggle || !elements.navLinks) return;
-    
+
     elements.navToggle.addEventListener('click', () => {
         const isOpen = elements.navLinks.classList.toggle('is-open');
         elements.navToggle.setAttribute('aria-expanded', String(isOpen));
-        elements.navToggle.innerHTML = isOpen 
-            ? '<i class="ph ph-x"></i>' 
+        elements.navToggle.innerHTML = isOpen
+            ? '<i class="ph ph-x"></i>'
             : '<i class="ph ph-list"></i>';
     });
-    
+
     elements.navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', closeMobileNav);
     });
-    
+
     document.addEventListener('click', (e) => {
         if (!elements.navLinks.contains(e.target) && !elements.navToggle.contains(e.target)) {
             closeMobileNav();
         }
     });
-    
+
     window.addEventListener('resize', () => {
         if (window.innerWidth > 768) closeMobileNav();
     });
@@ -764,30 +764,30 @@ function getActiveFilter(name) {
 
 function filterData() {
     if (!state.currentModule) return;
-    
+
     const searchTerm = elements.searchInput?.value.toLowerCase().trim() || '';
     const activeType = getActiveFilter('type');
     const moduleItems = state.allData.filter(item => item.module === state.currentModule);
-    
+
     const filtered = moduleItems.filter(item => {
         const matchSearch = searchTerm === '' ||
             item.title.toLowerCase().includes(searchTerm) ||
             item.description.toLowerCase().includes(searchTerm) ||
             item.tags.some(tag => tag.toLowerCase().includes(searchTerm));
-        
+
         const matchType = activeType === 'all' || item.type === activeType;
         return matchSearch && matchType;
     });
-    
+
     renderContent(filtered);
     window.dispatchEvent(new CustomEvent('filterRendered'));
 }
 
 function resetFilters() {
     if (elements.searchInput) elements.searchInput.value = '';
-    
+
     document.querySelector('input[name="type"][value="all"]')?.click();
-    
+
     filterData();
 }
 
@@ -803,7 +803,7 @@ function escapeHtml(text) {
 function safeImageUrl(url) {
     if (!url) return 'https://placehold.co/400x250/4f46e5/ffffff?text=صورة';
     const trimmed = String(url).trim();
-    if (trimmed.startsWith('https://') || trimmed.startsWith('http://') || 
+    if (trimmed.startsWith('https://') || trimmed.startsWith('http://') ||
         trimmed.startsWith('assets/') || trimmed.startsWith('./assets/')) {
         return trimmed;
     }
@@ -812,22 +812,22 @@ function safeImageUrl(url) {
 
 function renderContent(data) {
     if (!elements.contentGrid) return;
-    
+
     // Cache DOM reference
     const grid = elements.contentGrid;
-    
+
     if (elements.resultsCount) {
         elements.resultsCount.innerHTML = `<i class="ph ph-sparkle"></i> ${data.length} نتيجة`;
     }
-    
+
     if (data.length === 0) {
         elements.emptyState.style.display = 'block';
         grid.innerHTML = '';
         return;
     }
-    
+
     elements.emptyState.style.display = 'none';
-    
+
     // Use DocumentFragment for batch DOM insertion (faster)
     const fragment = document.createDocumentFragment();
     data.forEach(item => {
@@ -836,7 +836,7 @@ function renderContent(data) {
     });
     grid.innerHTML = '';
     grid.appendChild(fragment);
-    
+
     // Re-observe new cards for animation
     observeCards();
 }
@@ -845,14 +845,14 @@ function createCardElement(item) {
     const card = document.createElement('article');
     card.className = 'card';
     card.dataset.id = item.id;
-    
+
     const isCompleted = state.completedItems.includes(item.id);
     if (isCompleted) card.classList.add('completed');
-    
+
     const typeLabel = item.type === 'lesson' ? 'درس' : 'تمرين';
     const typeClass = item.type === 'lesson' ? 'badge-lesson' : 'badge-exercise';
     const iconClass = item.type === 'lesson' ? 'ph-desktop' : 'ph-code';
-    
+
     card.innerHTML = `
         <div class="card-image-container">
             <img src="${safeImageUrl(item.image)}" alt="${escapeHtml(item.title)}" 
@@ -893,7 +893,7 @@ function createCardElement(item) {
             </button>
         </div>
     `;
-    
+
     return card;
 }
 
@@ -906,22 +906,22 @@ function updateProgressUI() {
 
 function toggleCompleted(id) {
     const index = state.completedItems.indexOf(id);
-    
+
     if (index === -1) {
         state.completedItems.push(id);
     } else {
         state.completedItems.splice(index, 1);
     }
-    
+
     localStorage.setItem('completedItems', JSON.stringify(state.completedItems));
     updateProgressUI();
     updateGamificationUI(); // تحديث نظام النقاط والشارات
     renderModules(); // Update module progress display
-    
+
     if (state.view === 'content') {
         filterData();
     }
-    
+
     if (elements.modal?.classList.contains('active')) {
         const modalItemId = parseInt(elements.modalBody?.dataset?.itemId);
         if (modalItemId === id) {
@@ -935,18 +935,18 @@ function toggleCompleted(id) {
 // ============================================
 function initModal() {
     if (!elements.modal) return;
-    
+
     elements.modalClose?.addEventListener('click', closeModal);
-    
+
     elements.modal.addEventListener('click', (e) => {
         if (e.target === elements.modal) closeModal();
     });
-    
+
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && elements.modal.classList.contains('active')) {
             closeModal();
         }
-        
+
         if (e.key === 'Tab' && elements.modal.classList.contains('active')) {
             trapModalFocus(e);
         }
@@ -957,12 +957,12 @@ function trapModalFocus(e) {
     const focusable = elements.modal.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
-    
+
     if (!focusable.length) return;
-    
+
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
-    
+
     if (e.shiftKey && document.activeElement === first) {
         e.preventDefault();
         last.focus();
@@ -975,22 +975,22 @@ function trapModalFocus(e) {
 function openModal(id) {
     const item = state.allData.find(d => d.id === id);
     if (!item || !elements.modal) return;
-    
+
     state.lastFocusedElement = document.activeElement;
     elements.modalBody.dataset.itemId = id;
-    
+
     const isCompleted = state.completedItems.includes(id);
     const typeLabel = item.type === 'lesson' ? 'درس' : 'تمرين';
     const typeClass = item.type === 'lesson' ? 'badge-lesson' : 'badge-exercise';
     const disabledAttr = item.isReady ? '' : 'disabled';
     const disabledClass = item.isReady ? '' : 'is-disabled';
-    const comingSoonNote = item.isReady 
-        ? '' 
+    const comingSoonNote = item.isReady
+        ? ''
         : `<p class="coming-soon-note">
             <i class="ph ph-hourglass-medium"></i>
             هذا المحتوى قيد الإعداد وسيكون متاحاً قريباً.
            </p>`;
-    
+
     elements.modalBody.innerHTML = `
         <nav class="breadcrumb" aria-label="مسار التنقل">
             <a href="#" onclick="closeModal(); return false;">
@@ -1043,7 +1043,7 @@ function openModal(id) {
             </button>
         </div>
     `;
-    
+
     elements.modal.classList.add('active');
     document.body.style.overflow = 'hidden';
     elements.modalClose?.focus();
@@ -1051,10 +1051,10 @@ function openModal(id) {
 
 function closeModal() {
     if (!elements.modal) return;
-    
+
     elements.modal.classList.remove('active');
     document.body.style.overflow = '';
-    
+
     if (state.lastFocusedElement && typeof state.lastFocusedElement.focus === 'function') {
         state.lastFocusedElement.focus();
     }
@@ -1083,7 +1083,7 @@ function initScrollAnimations() {
         rootMargin: '0px',
         threshold: 0.1
     });
-    
+
     observeCards();
     window.addEventListener('filterRendered', observeCards);
 }
@@ -1100,9 +1100,9 @@ function observeCards() {
 function initNavbarScroll() {
     const navbar = document.querySelector('.navbar');
     if (!navbar) return;
-    
+
     let ticking = false;
-    
+
     window.addEventListener('scroll', () => {
         if (!ticking) {
             requestAnimationFrame(() => {
@@ -1162,15 +1162,15 @@ function calculateStats() {
     const totalItems = state.allData.length;
     const completedCount = state.completedItems.length;
     const percentage = totalItems > 0 ? Math.round((completedCount / totalItems) * 100) : 0;
-    
+
     // حساب النقاط
     let points = completedCount * 5; // 5 نقاط لكل درس مكتمل
-    
+
     // نقاط إضافية للمكافآت
     if (completedCount >= 1) points += BADGES.FIRST_LESSON.points;
     if (completedCount >= totalItems) points += BADGES.FULL_PLATFORM.points;
     if (percentage >= 50) points += BADGES.HALF_WAY.points;
-    
+
     return {
         totalItems,
         completedCount,
@@ -1193,12 +1193,12 @@ function checkAndAwardBadges() {
     const earned = JSON.parse(localStorage.getItem('earnedBadges')) || [];
     const newBadges = [];
     const completedCount = state.completedItems.length;
-    
+
     // فحص الشارات
     if (completedCount >= 1 && !earned.includes(BADGES.FIRST_LESSON.id)) {
         newBadges.push(BADGES.FIRST_LESSON);
     }
-    
+
     // إضافة الشارات المكتسبة
     newBadges.forEach(badge => {
         if (!earned.includes(badge.id)) {
@@ -1206,7 +1206,7 @@ function checkAndAwardBadges() {
             showBadgeNotification(badge);
         }
     });
-    
+
     localStorage.setItem('earnedBadges', JSON.stringify(earned));
     return newBadges;
     /* Fixed: 4 */
@@ -1250,7 +1250,7 @@ function showBadgeNotification(badge) {
             <i class="ph-fill ${badge.icon}"></i>
         </div>
         <div class="badge-notification-content">
-            <span class="badge-label">获得新徽章!</span>
+            <span class="badge-label">حصلت على شارة جديدة!</span>
             <strong>${badge.name}</strong>
             <p>${badge.desc}</p>
             <span class="badge-points">+${badge.points} نقاط</span>
@@ -1273,13 +1273,13 @@ function getEarnedBadges() {
 function updateGamificationUI() {
     const stats = calculateStats();
     checkAndAwardBadges();
-    
+
     // تحديث عناصر الواجهة
     const pointsEl = document.getElementById('userPoints');
     const rankEl = document.getElementById('userRank');
     const rankLabelEl = document.getElementById('userRankLabel');
     const badgesEl = document.getElementById('userBadges');
-    
+
     if (pointsEl) pointsEl.textContent = stats.points;
     if (rankEl) {
         rankEl.innerHTML = `<i class="ph-fill ${stats.rank.icon}"></i>`;
@@ -1287,11 +1287,11 @@ function updateGamificationUI() {
     if (rankLabelEl) {
         rankLabelEl.textContent = stats.rank.name;
     }
-    
+
     // تحديث الشارات
     if (badgesEl) {
         const badges = getEarnedBadges();
-        badgesEl.innerHTML = badges.length > 0 
+        badgesEl.innerHTML = badges.length > 0
             ? badges.map(b => `<span class="mini-badge" title="${b.name}"><i class="ph-fill ${b.icon}"></i></span>`).join('')
             : '<span class="no-badges">لا توجد شارات بعد</span>';
     }
