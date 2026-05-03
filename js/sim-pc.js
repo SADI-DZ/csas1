@@ -19,6 +19,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const parts = [
         {
+            id: 'case',
+            name: 'صندوق الحاسوب (PC Case)',
+            icon: 'desktop-tower',
+            requires: [],
+            category: 'Chassis',
+            details: {
+                function: 'الهيكل الخارجي الذي يحمل ويحمي جميع المكونات.',
+                specs: { type: 'ATX Mid-Tower', maxGpu: '400mm', cooling: '4x ARGB Fans' }
+            }
+        },
+        {
             id: 'psu',
             name: 'مزود الطاقة (PSU)',
             icon: 'plug',
@@ -52,6 +63,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         },
         {
+            id: 'cooler',
+            name: 'مبرد المعالج (CPU Cooler)',
+            icon: 'fan',
+            requires: ['cpu', 'motherboard'],
+            category: 'Cooling',
+            details: {
+                function: 'تبريد المعالج للحفاظ على استقرار الأداء ودرجات الحرارة.',
+                specs: { type: 'AIO 240mm', fanSpeed: '2000RPM', noise: '29dBA' }
+            }
+        },
+        {
             id: 'ram',
             name: 'الذاكرة (RAM)',
             icon: 'memory',
@@ -74,8 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         },
         {
-            id: 'storage',
-            name: 'التخزين (NVMe SSD)',
+            id: 'ssd',
+            name: 'وحدة التخزين (NVMe SSD)',
             icon: 'hard-drive',
             requires: ['motherboard'],
             category: 'Storage',
@@ -86,10 +108,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-    const stepOrder = ['psu', 'motherboard', 'cpu', 'ram', 'storage', 'gpu'];
+    const stepOrder = ['psu', 'motherboard', 'cpu', 'cooler', 'ram', 'gpu', 'ssd'];
+    const stepDetails = {
+        psu: { title: 'تركيب مزود الطاقة', warning: 'تأكد من فصل الكهرباء قبل البدء.' },
+        motherboard: { title: 'تثبيت اللوحة الأم', warning: '' },
+        cpu: { title: 'تركيب المعالج', warning: 'لا تلمس نقاط التوصيل الذهبية للمعالج.' },
+        cooler: { title: 'تركيب مبرد المعالج', warning: 'ضع كمية مناسبة من المعجون الحراري.' },
+        ram: { title: 'تركيب الذاكرة', warning: 'استخدم فتحات A2/B2 للأداء الأفضل.' },
+        gpu: { title: 'تركيب بطاقة الرسوميات', warning: 'تأكد من تثبيت البطاقة بالمسامير الخلفية.' },
+        ssd: { title: 'تركيب وحدة التخزين', warning: '' }
+    };
     const maxGpuLengthMm = 300;
     const storageKey = 'pc-sim-saved-builds-v1';
-    const installedParts = new Set();
+    const installedParts = new Set(['case']);
     const meshByPart = new Map();
     const pickable = [];
     let selectedPartId = null;
@@ -102,7 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ram: { position: new THREE.Vector3(-1.28, 2.18, -0.08), rotation: new THREE.Euler(0, Math.PI / 2, 0), scale: 1 },
         gpu: { position: new THREE.Vector3(-0.25, 1.82, 0.02), rotation: new THREE.Euler(0, 0, 0), scale: 1 },
         psu: { position: new THREE.Vector3(1.8, 0.73, 0), rotation: new THREE.Euler(0, 0, 0), scale: 1 },
-        storage: { position: new THREE.Vector3(1.7, 1.85, -0.58), rotation: new THREE.Euler(0, 0, 0), scale: 1 }
+        cooler: { position: new THREE.Vector3(-1.25, 2.45, 0.42), rotation: new THREE.Euler(0, Math.PI / 2, 0), scale: 1 },
+        ssd: { position: new THREE.Vector3(1.7, 1.85, -0.58), rotation: new THREE.Euler(0, 0, 0), scale: 1 }
     };
 
     const spawnTransforms = {
@@ -111,7 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ram: { position: new THREE.Vector3(3.5, 3.0, 2.2), rotation: new THREE.Euler(0.05, -0.45, 0.16), scale: 0.95 },
         gpu: { position: new THREE.Vector3(3.8, 2.6, 2.5), rotation: new THREE.Euler(0.15, -0.55, 0.08), scale: 0.9 },
         psu: { position: new THREE.Vector3(3.6, 2.5, 2.8), rotation: new THREE.Euler(0.1, -0.55, 0.1), scale: 0.92 },
-        storage: { position: new THREE.Vector3(3.4, 2.8, 2.4), rotation: new THREE.Euler(0.2, -0.5, 0.1), scale: 0.95 }
+        cooler: { position: new THREE.Vector3(3.5, 3.0, 2.3), rotation: new THREE.Euler(0.15, -0.5, 0.12), scale: 0.92 },
+        ssd: { position: new THREE.Vector3(3.4, 2.8, 2.4), rotation: new THREE.Euler(0.2, -0.5, 0.1), scale: 0.95 }
     };
 
     const scene = new THREE.Scene();
@@ -203,6 +236,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!installedParts.has('psu')) {
                 errors.push('بطاقة الرسوميات تحتاج مزود طاقة مركبا أولاً.');
             }
+        }
+
+        if (installedParts.has('cooler') && !installedParts.has('cpu')) {
+            errors.push('لا يمكن تركيب المبرد قبل تركيب المعالج.');
         }
 
         return errors;
@@ -317,13 +354,31 @@ document.addEventListener('DOMContentLoaded', () => {
             group.add(fan);
         }
 
-        if (partId === 'storage') {
+        if (partId === 'ssd') {
             const ssd = new THREE.Mesh(
                 new THREE.BoxGeometry(0.68, 0.12, 0.95),
                 new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.5, roughness: 0.35 })
             );
             ssd.position.set(1.7, 1.85, -0.58);
             group.add(ssd);
+        }
+
+        if (partId === 'cooler') {
+            const radiator = new THREE.Mesh(
+                new THREE.BoxGeometry(1.2, 0.25, 0.7),
+                new THREE.MeshStandardMaterial({ color: 0x1f2937, metalness: 0.6, roughness: 0.45 })
+            );
+            radiator.rotation.y = Math.PI / 2;
+            radiator.position.set(-1.22, 2.45, 0.42);
+            group.add(radiator);
+
+            const ring = new THREE.Mesh(
+                new THREE.TorusGeometry(0.2, 0.03, 12, 28),
+                new THREE.MeshStandardMaterial({ color: 0x22d3ee, emissive: 0x22d3ee, emissiveIntensity: 0.35 })
+            );
+            ring.rotation.y = Math.PI / 2;
+            ring.position.set(-1.22, 2.45, 0.42);
+            group.add(ring);
         }
 
         group.traverse((node) => {
@@ -447,6 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function installPart(partId) {
+        if (partId === 'case') return;
         if (installedParts.has(partId)) return;
         installedParts.add(partId);
         const mesh = await createPartObject(partId);
@@ -462,6 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function uninstallPart(partId) {
+        if (partId === 'case') return;
         const dependents = parts.filter((p) => p.requires.includes(partId)).map((p) => p.id);
         dependents.forEach((depId) => {
             if (installedParts.has(depId)) uninstallPart(depId);
@@ -481,11 +538,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const firstPending = stepOrder.find((id) => !installedParts.has(id));
         stepOrder.forEach((id, idx) => {
             const li = document.createElement('li');
-            li.textContent = `${idx + 1}. ${partById(id).name}`;
+            const meta = stepDetails[id];
+            li.textContent = `${idx + 1}. ${meta ? meta.title : partById(id).name}`;
             if (installedParts.has(id)) li.classList.add('is-done');
             if (id === firstPending) li.classList.add('is-current');
             stepsList.appendChild(li);
         });
+
+        if (firstPending && stepDetails[firstPending]?.warning) {
+            const hint = document.createElement('li');
+            hint.textContent = `تنبيه: ${stepDetails[firstPending].warning}`;
+            hint.style.color = 'var(--warning-color)';
+            stepsList.appendChild(hint);
+        }
     }
 
     function renderErrors() {
@@ -520,19 +585,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateStatus() {
-        if (installedParts.size === 0) {
+        const installedCount = stepOrder.filter((id) => installedParts.has(id)).length;
+        if (installedCount === 0) {
             statusText.textContent = 'في انتظار تركيب القطع داخل النموذج ثلاثي الأبعاد...';
             statusText.style.color = 'var(--text-muted)';
             return;
         }
 
-        if (installedParts.size === parts.length) {
+        if (installedCount === stepOrder.length) {
             statusText.textContent = 'تم تجميع الحاسوب بالكامل بنجاح (3D)';
             statusText.style.color = 'var(--success-color)';
             return;
         }
 
-        statusText.textContent = `تم تركيب ${installedParts.size} من ${parts.length} قطع`;
+        statusText.textContent = `تم تركيب ${installedCount} من ${stepOrder.length} قطع`;
         statusText.style.color = 'var(--primary-color)';
     }
 
@@ -582,6 +648,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pcInventory.innerHTML = '';
 
         parts.forEach((part) => {
+            if (part.id === 'case') return;
             const isInstalled = installedParts.has(part.id);
             const canInstall = part.requires.every((dep) => installedParts.has(dep));
 
