@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;">
+    <!-- Fixed: 13 -->
+    <title>منصتي التعليمية | التعلم أسهل</title>
+    <meta name="description"
+        content="منصة تعليمية لطلاب المرحلة الثانوية تحتوي على دروس وتمارين مبسطة في المعلوماتية وتقنيات الويب والمكتبية.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web" defer></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <a class="skip-link" href="#mainContent">تخطي إلى المحتوى</a>
+
+    <!-- Navbar -->
+    <header class="navbar" id="top">
+        <div class="container nav-content">
+            <a href="#" class="logo" onclick="showModulesView(); return false;">
+                <i class="ph-fill ph-graduation-cap"></i>
+                <span>منصتي</span>
+            </a>
+            <button id="navToggle" class="nav-toggle" type="button" aria-label="فتح القائمة" aria-expanded="false">
+                <i class="ph ph-list"></i>
+            </button>
+            <nav class="nav-links" id="primaryNav">
+                <a href="index.html">الرئيسية</a>
+                <a href="lab.html" class="active">مخبر المعلوماتية</a>
+                <div class="nav-actions">
+                    <button id="fontToggle" class="icon-btn" aria-label="تكبير الخط">
+                        <i class="ph ph-text-aa"></i>
+                    </button>
+                    <button id="themeToggle" class="icon-btn" aria-label="تفعيل الوضع الليلي">
+                        <i class="ph ph-moon-stars"></i>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+
+
+    <main id="mainContent">
+        <!-- Lab Modules (like homepage axes) -->
+        <section class="modules-section lab-modules-page" id="labModulesSection">
+            <div class="container">
+                <div class="section-header">
+                    <h2><i class="ph ph-flask"></i> مخبر المعلوماتية</h2>
+                    <p class="section-subtitle">اختر قسماً للدخول إلى النشاط</p>
+                </div>
+
+                <!-- المجموعة الأولى: بيئة التعامل مع الحاسوب -->
+                <div class="lab-category-group">
+                    <div class="lab-category-header">
+                        <h3 class="lab-category-title">
+                            <i class="ph ph-desktop-tower"></i>
+                            <span>بيئة التعامل مع الحاسوب</span>
+                        </h3>
+                        <div class="lab-category-line"></div>
+                    </div>
+                    <div class="lab-category-grid lab-grid-3" id="labModulesGrid">
+                        <div class="module-card module-1" role="button" tabindex="0" data-lab-target="activity-networks" data-lab-title="إنشاء شبكات بسيطة" aria-label="الانتقال إلى نشاط: إنشاء شبكات بسيطة">
+                            <div class="module-icon"><i class="ph ph-network"></i></div>
+                            <div class="module-content">
+                                <h3 class="module-title">إنشاء شبكات بسيطة</h3>
+                                <p class="module-desc">تعلم أساسيات الشبكات وبناء شبكة بسيطة.</p>
+                            </div>
+                        </div>
+
+                        <div class="module-card module-3" role="button" tabindex="0" data-lab-target="activity-build-pc" data-lab-title="محاكاة تجميع حاسوب" aria-label="الانتقال إلى نشاط: محاكاة تجميع حاسوب">
+                            <div class="module-icon"><i class="ph ph-cpu"></i></div>
+                            <div class="module-content">
+                                <h3 class="module-title">محاكاة تجميع حاسوب</h3>
+                                <p class="module-desc">قسم تفاعلي لتعلم قطع الحاسوب وتركيبها.</p>
+                            </div>
+                        </div>
+
+                        <div class="module-card module-4" role="button" tabindex="0" data-lab-target="activity-win11" data-lab-title="محاكاة تثبيت Windows 11" aria-label="الانتقال إلى نشاط: محاكاة تثبيت Windows 11">
+                            <div class="module-icon"><i class="ph ph-windows-logo"></i></div>
+                            <div class="module-content">
+                                <h3 class="module-title">محاكاة تثبيت Windows 11</h3>
+                                <p class="module-desc">خطوات التثبيت والإعدادات الأساسية بشكل مبسط.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المجموعة الثانية: مقدمة في البرمجة -->
+                <div class="lab-category-group">
+                    <div class="lab-category-header">
+                        <h3 class="lab-category-title">
+                            <i class="ph ph-code-block"></i>
+                            <span>مقدمة في البرمجة</span>
+                        </h3>
+                        <div class="lab-category-line"></div>
+                    </div>
+                    <div class="lab-category-grid lab-grid-2">
+                        <div class="module-card module-2" role="button" tabindex="0" data-lab-target="activity-algorithms" data-lab-title="محرر الخوارزميات" aria-label="الانتقال إلى نشاط: محرر الخوارزميات">
+                            <div class="module-icon"><i class="ph ph-brackets-curly"></i></div>
+                            <div class="module-content">
+                                <h3 class="module-title">محرر الخوارزميات</h3>
+                                <p class="module-desc">اكتب خوارزمية ونفّذها خطوة بخطوة مع تتبع المتغيرات.</p>
+                            </div>
+                        </div>
+
+                        <div class="module-card module-1" role="button" tabindex="0" data-lab-target="activity-flowcharts" data-lab-title="المخططات الانسيابية" aria-label="الانتقال إلى نشاط: المخططات الانسيابية">
+                            <div class="module-icon"><i class="ph ph-git-branch"></i></div>
+                            <div class="module-content">
+                                <h3 class="module-title">المخططات الانسيابية</h3>
+                                <p class="module-desc">بناء المخططات الانسيابية بصرياً وربطها بالخوارزميات.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المجموعة الثالثة: أنشطة إضافية -->
+                <div class="lab-category-group">
+                    <div class="lab-category-header">
+                        <h3 class="lab-category-title">
+                            <i class="ph ph-globe"></i>
+                            <span>تقنيات الويب</span>
+                        </h3>
+                        <div class="lab-category-line"></div>
+                    </div>
+                    <div class="lab-category-grid lab-grid-1">
+                        <div class="module-card module-1" role="button" tabindex="0" data-lab-target="activity-coding" data-lab-title="ورشة HTML" aria-label="الانتقال إلى نشاط: ورشة HTML">
+                            <div class="module-icon"><i class="ph ph-code"></i></div>
+                            <div class="module-content">
+                                <h3 class="module-title">ورشة HTML</h3>
+                                <p class="module-desc">اكتب أكواد HTML وشاهد النتيجة مباشرة.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lab Activities -->
+        <section class="lab-section" id="labActivitiesSection" style="display:none;">
+            <div class="container">
+                <div class="content-header">
+                    <button class="back-btn" type="button" id="labBackBtn">
+                        <i class="ph ph-arrow-right"></i>
+                        رجوع للأقسام
+                    </button>
+                    <h2 id="labActivityTitle"><i class="ph ph-flask"></i><span>النشاط</span></h2>
+                </div>
+
+                <div class="lab-activity" id="activity-coding" hidden>
+                    <div class="lab-hero" aria-label="مقدمة ورشة HTML">
+                        <div class="lab-hero-grid" aria-hidden="true"></div>
+                        <div class="lab-hero-orb orb-1" aria-hidden="true"></div>
+                        <div class="lab-hero-orb orb-2" aria-hidden="true"></div>
+                        <div class="lab-hero-content">
+                            <span class="lab-hero-badge"><i class="ph ph-code"></i> ورشة</span>
+                            <h3 class="lab-hero-title">ورشة HTML</h3>
+                            <p class="lab-hero-subtitle">اكتب HTML وشاهد النتيجة مباشرة في المتصفح الافتراضي.</p>
+                            <div class="lab-hero-tips" aria-label="نصائح سريعة">
+                                <span class="tip"><i class="ph ph-lightning"></i> تحديث فوري</span>
+                                <span class="tip"><i class="ph ph-play-circle"></i> زر تشغيل للمعاينة</span>
+                                <span class="tip"><i class="ph ph-arrow-counter-clockwise"></i> إعادة</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lab-grid">
+                        <article class="lab-card lab-card-html">
+                            <div class="lab-card-header">
+                                <h3><i class="ph ph-code"></i> محرر HTML</h3>
+                                <div class="lab-actions">
+                                    <button id="runHtmlPreviewBtn" class="btn-run" type="button">
+                                        <i class="ph ph-play"></i>
+                                        تشغيل
+                                    </button>
+                                    <button id="resetHtmlEditorBtn" class="btn-reset" type="button">
+                                        <i class="ph ph-arrow-counter-clockwise"></i>
+                                        إعادة
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="editor-window">
+                                <div class="window-header">
+                                    <div class="window-controls">
+                                        <span class="control close"></span>
+                                        <span class="control minimize"></span>
+                                        <span class="control maximize"></span>
+                                    </div>
+                                    <div class="window-title">index.html</div>
+                                </div>
+                                <div class="code-editor-wrap">
+                                    <pre id="htmlHighlight" class="code-highlight" aria-hidden="true"></pre>
+                                    <textarea id="htmlEditor" class="code-editor" spellcheck="false" aria-label="محرر HTML"></textarea>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="lab-card lab-card-browser">
+                            <div class="lab-card-header">
+                                <h3><i class="ph ph-browser"></i> المتصفح الافتراضي</h3>
+                                <span class="lab-note">معاينة حية للنتيجة</span>
+                            </div>
+                            <div class="browser-window">
+                                <div class="window-header browser-header">
+                                    <div class="window-controls">
+                                        <span class="control close"></span>
+                                        <span class="control minimize"></span>
+                                        <span class="control maximize"></span>
+                                    </div>
+                                    <div class="browser-url-bar">
+                                        <i class="ph ph-lock-key"></i> localhost:3000
+                                    </div>
+                                </div>
+                                <iframe id="htmlPreviewFrame" class="preview-frame" title="معاينة النتيجة"></iframe>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="lab-activity" id="activity-algorithms" hidden>
+                    <div class="lab-hero" aria-label="مقدمة محرر الخوارزميات">
+                        <div class="lab-hero-grid" aria-hidden="true"></div>
+                        <div class="lab-hero-orb orb-1" aria-hidden="true"></div>
+                        <div class="lab-hero-orb orb-2" aria-hidden="true"></div>
+                        <div class="lab-hero-content">
+                            <span class="lab-hero-badge"><i class="ph ph-brackets-curly"></i> خوارزميات</span>
+                            <h3 class="lab-hero-title">محرر الخوارزميات</h3>
+                            <p class="lab-hero-subtitle">اكتب خوارزمية بصيغة مبسطة ثم نفّذها وشاهد المتغيرات والمخرجات.</p>
+                            <div class="lab-hero-tips" aria-label="أوامر مدعومة">
+                                <span class="tip"><i class="ph ph-terminal-window"></i> let x = 5</span>
+                                <span class="tip"><i class="ph ph-terminal-window"></i> print x</span>
+                                <span class="tip"><i class="ph ph-terminal-window"></i> if x &gt; 3 then</span>
+                                <span class="tip"><i class="ph ph-terminal-window"></i> while x &lt; 10 do</span>
+                                <span class="tip"><i class="ph ph-terminal-window"></i> end</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lab-grid algo-grid">
+                        <article class="lab-card">
+                            <div class="lab-card-header">
+                                <h3><i class="ph ph-pencil-line"></i> محرر الخوارزمية</h3>
+                                <div class="algo-lang-toggle" id="algoLangToggle">
+                                    <button class="algo-lang-btn is-active" data-lang="en">EN</button>
+                                    <button class="algo-lang-btn" data-lang="fr">FR</button>
+                                </div>
+                                <div class="lab-actions">
+                                    <button id="algoRunBtn" class="btn-run" type="button">
+                                        <i class="ph ph-play"></i>
+                                        تشغيل
+                                    </button>
+                                    <button id="algoStepBtn" class="btn-reset" type="button">
+                                        <i class="ph ph-forward"></i>
+                                        خطوة
+                                    </button>
+                                    <button id="algoResetBtn" class="btn-reset" type="button">
+                                        <i class="ph ph-arrow-counter-clockwise"></i>
+                                        إعادة
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="algo-editor-wrap">
+                                <pre id="algoHighlight" class="algo-highlight" aria-hidden="true"></pre>
+                                <textarea id="algoEditor" class="algo-editor" spellcheck="false" aria-label="محرر الخوارزميات"></textarea>
+                            </div>
+                            <p class="lab-note" style="margin-top:0.75rem;">
+                                ملاحظة: هذه صيغة تعليمية مبسطة، وليست لغة برمجة كاملة.
+                            </p>
+                        </article>
+
+                        <article class="lab-card">
+                            <div class="lab-card-header">
+                                <h3><i class="ph ph-graph"></i> التتبع والنتائج</h3>
+                                <span class="lab-note">المتغيرات + الإخراج</span>
+                            </div>
+
+                            <div class="algo-panels">
+                                <div class="algo-panel">
+                                    <h4 class="algo-panel-title"><i class="ph ph-database"></i> المتغيرات</h4>
+                                    <div class="algo-vars" role="region" aria-label="جدول المتغيرات">
+                                        <table class="algo-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>الاسم</th>
+                                                    <th>القيمة</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="algoVarsBody" aria-live="polite">
+                                                <tr><td colspan="2" class="algo-empty">لا توجد متغيرات بعد</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="algo-panel">
+                                    <h4 class="algo-panel-title"><i class="ph ph-terminal"></i> الإخراج</h4>
+                                    <pre id="algoOutput" class="algo-output" aria-label="مخرجات الخوارزمية" aria-live="polite" aria-atomic="false"></pre>
+                                    <!-- Fixed: 11, 12 -->
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="lab-activity" id="activity-build-pc" hidden>
+                    <div class="lab-hero" aria-label="مقدمة تجميع حاسوب">
+                        <div class="lab-hero-grid" aria-hidden="true"></div>
+                        <div class="lab-hero-orb orb-1" aria-hidden="true"></div>
+                        <div class="lab-hero-orb orb-2" aria-hidden="true"></div>
+                        <div class="lab-hero-content">
+                            <span class="lab-hero-badge"><i class="ph ph-cpu"></i> عتاد</span>
+                            <h3 class="lab-hero-title">محاكاة تجميع حاسوب</h3>
+                            <p class="lab-hero-subtitle">تعلم كيفية تجميع مكونات الحاسوب خطوة بخطوة من خلال اختيار القطع وتركيبها في أماكنها الصحيحة.</p>
+                            <div class="lab-hero-tips" aria-label="نصائح سريعة">
+                                <span class="tip"><i class="ph ph-mouse"></i> اختر قطعة للتركيب</span>
+                                <span class="tip"><i class="ph ph-cube"></i> مشاهدة ثلاثية الأبعاد</span>
+                                <span class="tip"><i class="ph ph-arrows-clockwise"></i> اسحب للدوران</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lab-grid pc-sim-grid">
+                        <!-- Inventory Panel -->
+                        <article class="lab-card">
+                            <div class="lab-card-header">
+                                <h3><i class="ph ph-archive-box"></i> صندوق القطع</h3>
+                                <div class="lab-actions">
+                                    <button id="pcSimSaveBtn" class="btn-reset" type="button">
+                                        <i class="ph ph-floppy-disk"></i>
+                                        حفظ التجميعة
+                                    </button>
+                                    <button id="pcSimResetBtn" class="btn-reset" type="button">
+                                        <i class="ph ph-arrow-counter-clockwise"></i>
+                                        إعادة التجميع
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pc-inventory" id="pcInventory">
+                                <!-- Items will be injected via JS -->
+                            </div>
+                            <div class="pc-side-panel">
+                                <h4><i class="ph ph-list-checks"></i> خطوات التركيب</h4>
+                                <ol id="pcStepsList" class="pc-steps-list"></ol>
+                            </div>
+                            <div class="pc-side-panel">
+                                <h4><i class="ph ph-warning-circle"></i> تنبيهات التوافق</h4>
+                                <ul id="pcErrorList" class="pc-error-list"></ul>
+                            </div>
+                            <div class="pc-side-panel">
+                                <h4><i class="ph ph-hard-drives"></i> التجميعات المحفوظة</h4>
+                                <div id="pcSavedBuilds" class="pc-saved-builds"></div>
+                            </div>
+                        </article>
+
+                        <!-- Build Area Panel -->
+                        <article class="lab-card">
+                            <div class="lab-card-header">
+                                <h3><i class="ph ph-desktop-tower"></i> صندوق الحاسوب (Case)</h3>
+                                <span class="lab-note" id="pcSimStatus">في انتظار القطع...</span>
+                            </div>
+                            <div class="pc-build-area" id="pcBuildArea">
+                                <div class="pc-viewport" id="pc3dViewport" aria-label="مشهد ثلاثي الأبعاد لتجميع الحاسوب"></div>
+                                <p class="pc-viewport-hint">اسحب داخل المشهد للدوران، وعجلة الفأرة للتقريب/الإبعاد.</p>
+                            </div>
+                            <div class="pc-info-panel" id="pcInfoPanel">
+                                <h4 id="pcInfoTitle">اختر قطعة لعرض معلوماتها</h4>
+                                <p id="pcInfoDesc">انقر على أي قطعة من صندوق القطع أو على المكون داخل المشهد ثلاثي الأبعاد.</p>
+                                <div id="pcInfoSpecs" class="pc-spec-list"></div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="lab-activity" id="activity-win11" hidden>
+                    <div class="future-lab-grid">
+                        <article class="future-lab-card">
+                            <h3><i class="ph ph-windows-logo"></i> محاكاة تثبيت Windows 11</h3>
+                            <p>هذا القسم قيد التطوير وسيتم إضافته قريباً.</p>
+                            <span class="badge badge-coming-soon">قريبا</span>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="lab-activity" id="activity-networks" hidden>
+                    <div class="future-lab-grid">
+                        <article class="future-lab-card">
+                            <h3><i class="ph ph-network"></i> إنشاء شبكات بسيطة</h3>
+                            <p>هذا القسم قيد التطوير وسيتم إضافته قريباً.</p>
+                            <span class="badge badge-coming-soon">قريبا</span>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="lab-activity" id="activity-flowcharts" hidden>
+                    <div class="future-lab-grid">
+                        <article class="future-lab-card">
+                            <h3><i class="ph ph-git-branch"></i> تصميم المخططات الانسيابية</h3>
+                            <p>هذا القسم قيد التطوير وسيتم إضافته قريباً.</p>
+                            <span class="badge badge-coming-soon">قريبا</span>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="lab-activity" id="activity-coming-soon" hidden>
+                    <div class="section-header" style="margin-bottom: 1rem;">
+                        <h2><i class="ph ph-hourglass-medium"></i> محاكاة وتجارب تضاف قريبا</h2>
+                        <p class="section-subtitle">أقسام جديدة قيد التحضير لتوسيع المخبر</p>
+                    </div>
+
+                    <div class="future-lab-grid">
+                        <article class="future-lab-card">
+                            <h3><i class="ph ph-brackets-curly"></i> محرر أكواد الخوارزميات</h3>
+                            <p>أصبح متاحاً داخل المخبر ضمن قسم "محرر الخوارزميات".</p>
+                            <span class="badge badge-lesson">متاح الآن</span>
+                        </article>
+                        <article class="future-lab-card">
+                            <h3><i class="ph ph-git-branch"></i> تصميم المخططات الانسيابية</h3>
+                            <p>سيتم إضافته لاحقا لبناء المخططات بصريا وربطها بالخوارزميات.</p>
+                            <span class="badge badge-coming-soon">قريبا</span>
+                        </article>
+                        <article class="future-lab-card">
+                            <h3><i class="ph ph-cpu"></i> محاكاة تجميع حاسوب</h3>
+                            <p>أصبح متاحاً الآن داخل المخبر للتفاعل مع مكونات الحاسوب.</p>
+                            <span class="badge badge-lesson">متاح الآن</span>
+                        </article>
+                        <article class="future-lab-card">
+                            <h3><i class="ph ph-windows-logo"></i> محاكاة تثبيت Windows 11</h3>
+                            <p>سيتم إضافته لاحقا لشرح خطوات تثبيت ويندوز 11 وإعداداته الأساسية بطريقة تفاعلية.</p>
+                            <span class="badge badge-coming-soon">قريبا</span>
+                        </article>
+                        <article class="future-lab-card">
+                            <h3><i class="ph ph-network"></i> إنشاء شبكات بسيطة</h3>
+                            <p>سيتم إضافته لاحقا للتعرف على أساسيات الشبكات وبناء شبكة منزلية/مدرسية بسيطة.</p>
+                            <span class="badge badge-coming-soon">قريبا</span>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 منصتي التعليمية. صُممت بحب للطلاب.</p>
+            <div class="developer-credit">
+                <span>التصميم والتطوير بواسطة</span>
+                <img src="assets/images/sadi-logo.png.jpeg" alt="SADI Logo" class="developer-logo">
+            </div>
+            <div class="visitor-counter">
+                <i class="ph ph-users-three"></i>
+                عدد الزوار: <span id="visitorCount">...</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lesson Modal -->
+    <div class="modal" id="lessonModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose" aria-label="إغلاق النافذة">
+                <i class="ph ph-x"></i>
+            </button>
+            <div class="modal-body" id="modalBody">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="data/data.js" defer></script>
+    <script src="js/main.js" defer></script>
+    <script src="js/algo-lab.js" defer></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.164.1/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.164.1/examples/jsm/"
+            }
+        }
+    </script>
+    <script type="module" src="js/sim-pc.js"></script>
+    <script defer>
+        // Lab-only navigation (modules -> activity), without touching homepage logic.
+        document.addEventListener('DOMContentLoaded', () => {
+            const modulesSection = document.getElementById('labModulesSection');
+            const activitiesSection = document.getElementById('labActivitiesSection');
+            const titleEl = document.getElementById('labActivityTitle');
+            const backBtn = document.getElementById('labBackBtn');
+            const cards = Array.from(document.querySelectorAll('[data-lab-target]'));
+            const activities = Array.from(document.querySelectorAll('.lab-activity'));
+
+            if (!modulesSection || !activitiesSection || !titleEl || !backBtn) return;
+
+            const setTitle = (text) => {
+                titleEl.innerHTML = `<i class="ph ph-flask"></i><span>${text}</span>`;
+            };
+
+            const showModules = () => {
+                activities.forEach(a => a.hidden = true);
+                activitiesSection.style.display = 'none';
+                modulesSection.style.display = 'block';
+                setTitle('النشاط');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            const showActivity = (id, text) => {
+                const target = document.getElementById(id);
+                if (!target) return;
+                activities.forEach(a => a.hidden = true);
+                target.hidden = false;
+                modulesSection.style.display = 'none';
+                activitiesSection.style.display = 'block';
+                setTitle(text || 'النشاط');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            const activateCard = (card) => {
+                const id = card.getAttribute('data-lab-target');
+                const text = card.getAttribute('data-lab-title') || card.textContent.trim();
+                showActivity(id, text);
+            };
+
+            cards.forEach(card => {
+                card.addEventListener('click', () => activateCard(card));
+                card.addEventListener('keydown', (e) => {
+                    if (e.key !== 'Enter' && e.key !== ' ') return;
+                    e.preventDefault();
+                    activateCard(card);
+                });
+            });
+
+            backBtn.addEventListener('click', showModules);
+
+            // Override logo action in lab page only.
+            window.showModulesView = showModules;
+
+            // Start with modules view.
+            showModules();
+        });
+    </script>
+</body>
+
+</html>

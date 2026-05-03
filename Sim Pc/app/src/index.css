@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 91%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 91%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 91%;
+    --primary: 156 100% 50%;
+    --primary-foreground: 0 0% 4%;
+    --secondary: 0 0% 16%;
+    --secondary-foreground: 0 0% 91%;
+    --muted: 0 0% 16%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 210 100% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 156 100% 50%;
+    --radius: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Cairo', sans-serif;
+    direction: rtl;
+    overflow-x: hidden;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .neon-glow {
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.3),
+                0 0 20px rgba(0, 255, 136, 0.2),
+                0 0 30px rgba(0, 255, 136, 0.1);
+  }
+
+  .neon-glow-strong {
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.5),
+                0 0 30px rgba(0, 255, 136, 0.3),
+                0 0 45px rgba(0, 255, 136, 0.2);
+  }
+
+  .glass-panel {
+    background: rgba(26, 26, 26, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #00ff88, #0088ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .component-card {
+    @apply relative overflow-hidden rounded-xl transition-all duration-300 cursor-pointer;
+    background: rgba(26, 26, 26, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .component-card:hover {
+    transform: scale(1.03);
+    border-color: rgba(0, 255, 136, 0.3);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.15);
+  }
+
+  .step-indicator {
+    @apply flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold transition-all duration-300;
+  }
+
+  .step-active {
+    @apply bg-[#00ff88] text-black;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+  }
+
+  .step-completed {
+    @apply bg-[#0088ff] text-white;
+  }
+
+  .step-pending {
+    @apply bg-[#2a2a2a] text-gray-500;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

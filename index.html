@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصتي التعليمية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web" defer></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <a class="skip-link" href="#mainContent">تخطي إلى المحتوى</a>
+
+    <header class="navbar" id="top">
+        <div class="container nav-content">
+            <a href="#" class="logo" onclick="showModulesView(); return false;">
+                <i class="ph-fill ph-graduation-cap"></i>
+                <span>منصتي</span>
+            </a>
+            <button id="navToggle" class="nav-toggle" type="button" aria-label="فتح القائمة" aria-expanded="false">
+                <i class="ph ph-list"></i>
+            </button>
+            <nav class="nav-links" id="primaryNav">
+                <a href="index.html" class="active">الرئيسية</a>
+                <a href="lab.html">مخبر المعلوماتية</a>
+                <div class="nav-actions">
+                    <button id="fontToggle" class="icon-btn" aria-label="تكبير الخط">
+                        <i class="ph ph-text-aa"></i>
+                    </button>
+                    <button id="themeToggle" class="icon-btn" aria-label="تفعيل الوضع الليلي">
+                        <i class="ph ph-moon-stars"></i>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-bg-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>تعلّم <span>المعلوماتية</span> بأسلوب مختلف</h1>
+                <p>منصة تعليمية مخصصة لطلاب المرحلة الثانوية</p>
+                <div class="search-box">
+                    <i class="ph ph-magnifying-glass search-icon"></i>
+                    <input id="searchInput" type="search" placeholder="ابحث عن درس أو تمرين...">
+                    <button id="searchBtn" type="button">بحث</button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number"><span id="totalLessons">0</span></span>
+                        <span class="stat-label">درس</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">4</span>
+                        <span class="stat-label">محور</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">مجاني</span>
+                        <span class="stat-label">100%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main id="mainContent">
+        <section class="modules-section" id="modulesSection">
+            <div class="container">
+                <div class="section-header">
+                    <h2><i class="ph ph-book-open"></i> المحاور الدراسية</h2>
+                    <p class="section-subtitle">اختر محوراً للبدء</p>
+                </div>
+                <div class="modules-grid" id="modulesGrid"></div>
+            </div>
+        </section>
+
+        <div id="contentWrapper" style="display:none;">
+            <div class="container">
+                <div class="content-header">
+                    <button id="navBackBtn" class="back-btn" type="button" style="display:none;">
+                        <i class="ph ph-arrow-right"></i>
+                        رجوع للمحاور
+                    </button>
+                    <h2 id="moduleTitle">
+                        <i class="ph ph-book"></i>
+                        <span>المحتوى</span>
+                    </h2>
+                    <span class="results-count" id="resultsCount"></span>
+                </div>
+
+                <div class="main-layout">
+                    <aside class="sidebar">
+                        <div class="progress-tracker">
+                            <div class="progress-header">
+                                <div class="progress-icon">
+                                    <i class="ph ph-chart-line"></i>
+                                </div>
+                                <h3>تقدمي</h3>
+                            </div>
+                            <div class="progress-stats">
+                                <span>المكتمل: <strong id="completedCount">0</strong> / <span id="totalCount">0</span></span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" id="progressBarFill"></div>
+                            </div>
+                            <div class="progress-percentage"><span id="progressPercentage">0</span>%</div>
+                        </div>
+
+                        <div class="filter-group">
+                            <h3><i class="ph ph-funnel"></i> تصفية</h3>
+                            <div class="filter-category">
+                                <h4><i class="ph ph-tag"></i> النوع</h4>
+                                <label class="filter-item">
+                                    <input type="radio" name="type" value="all" checked>
+                                    <span>الكل</span>
+                                </label>
+                                <label class="filter-item">
+                                    <input type="radio" name="type" value="lesson">
+                                    <span>الدروس</span>
+                                </label>
+                                <label class="filter-item">
+                                    <input type="radio" name="type" value="exercise">
+                                    <span>التمارين</span>
+                                </label>
+                            </div>
+                            <button class="reset-filters-btn" id="resetFiltersBtn" type="button">
+                                <i class="ph ph-arrow-counter-clockwise"></i>
+                                إعادة الفلاتر
+                            </button>
+                        </div>
+                    </aside>
+
+                    <section class="content-section">
+                        <div class="content-grid" id="contentGrid"></div>
+                        <div class="empty-state" id="emptyState" style="display:none;">
+                            <i class="ph ph-magnifying-glass"></i>
+                            <h3>لا توجد نتائج</h3>
+                            <p>جرب كلمة بحث أخرى</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 منصتي التعليمية. صُممت بحب للطلاب.</p>
+            <div class="developer-credit">
+                <span>التصميم والتطوير بواسطة</span>
+                <img src="assets/images/sadi-logo.png.jpeg" alt="SADI Logo" class="developer-logo">
+            </div>
+            <div class="visitor-counter">
+                <i class="ph ph-users-three"></i>
+                عدد الزوار: <span id="visitorCount">...</span>
+            </div>
+        </div>
+    </footer>
+
+    <div class="modal" id="lessonModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose" aria-label="إغلاق النافذة">
+                <i class="ph ph-x"></i>
+            </button>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="data/data.js" defer></script>
+    <script src="js/main.js" defer></script>
+</body>
+</html>

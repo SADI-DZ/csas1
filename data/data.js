@@ -1,0 +1,211 @@
+const contentData = [
+    {
+        "id": 1,
+        "title": "تقنية المعلومات",
+        "module": "بيئة التعامل مع الحاسوب",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "مفهوم تقنية المعلومات (IT) وأهميتها في حياتنا اليومية ومجالات استخدامها.",
+        "tags": ["معلوماتية", "تقنية", "مفاهيم"],
+        "date": "2026-04-10",
+        "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+        "id": 2,
+        "title": "تجميع الحاسوب",
+        "module": "بيئة التعامل مع الحاسوب",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "التعرف على المكونات المادية (Hardware) وكيفية تجميعها لعمل حاسوب متكامل.",
+        "tags": ["عتاد", "تجميع", "مكونات"],
+        "date": "2026-04-12",
+        "image": "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+        "id": 3,
+        "title": "نظام التشغيل",
+        "module": "بيئة التعامل مع الحاسوب",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "مفهوم نظام التشغيل، أنواعه، ودوره الأساسي كحلقة وصل بين المستخدم والعتاد.",
+        "tags": ["نظام تشغيل", "ويندوز", "برمجيات"],
+        "date": "2026-04-15",
+        "image": "https://images.unsplash.com/photo-1629654297299-c8506221ca97?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+        "id": 4,
+        "title": "لوحة التحكم",
+        "module": "بيئة التعامل مع الحاسوب",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "كيفية استخدام لوحة التحكم (Control Panel) لضبط إعدادات النظام وإدارة البرامج.",
+        "tags": ["إعدادات", "نظام", "تحكم"],
+        "date": "2026-04-18",
+        "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+        "id": 5,
+        "title": "حماية الحاسوب",
+        "module": "بيئة التعامل مع الحاسوب",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "مخاطر الفيروسات وكيفية استخدام برامج الحماية (Antivirus) للحفاظ على أمان البيانات.",
+        "tags": ["حماية", "فيروسات", "أمان"],
+        "date": "2026-04-20",
+        "image": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+        "id": 6,
+        "title": "الشبكة المحلية",
+        "module": "بيئة التعامل مع الحاسوب",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "مفهوم الشبكة المحلية (LAN)، المكونات اللازمة لإنشائها، وفوائد مشاركة الموارد.",
+        "tags": ["شبكات", "توصيل", "محلي"],
+        "date": "2026-04-25",
+        "image": "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+        "id": 7,
+        "title": "المخططات الانسيابية",
+        "module": "مدخل الى البرمجة",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "تعلم كيفية تمثيل الخوارزميات باستخدام الأشكال الهندسية لتبسيط فهم تسلسل العمليات.",
+        "tags": ["مخططات", "خوارزميات", "تسلسل"],
+        "date": "2026-04-28",
+        "image": "https://images.unsplash.com/photo-1508317469940-e3de49ba902e?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+        "id": 8,
+        "title": "مقدمة في الخوارزميات",
+        "module": "مدخل الى البرمجة",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "مفهوم الخوارزمية، خصائصها، وكيفية التفكير المنطقي المتسلسل لحل المشكلات.",
+        "tags": ["خوارزميات", "أساسيات", "منطق"],
+        "date": "2026-04-30",
+        "image": "https://images.unsplash.com/photo-1516116216624-53e697fedbea?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+        "id": 9,
+        "title": "التعليمات الاساسية للخوارزميات",
+        "module": "مدخل الى البرمجة",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "التعرف على تعليمات القراءة، الكتابة، والإسناد لبناء هيكل الخوارزمية الأساسي.",
+        "tags": ["تعليمات", "إسناد", "قراءة"],
+        "date": "2026-05-02",
+        "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+        "id": 10,
+        "title": "المتصفح",
+        "module": "تقنيات الويب",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "تعريف المتصفح (Browser)، وظائفه، ومقارنة بين أشهر المتصفحات المستخدمة.",
+        "tags": ["ويب", "تصفح", "إنترنت"],
+        "date": "2026-05-05",
+        "image": "assets/images/browser_thumb.jpg"
+    },
+    {
+        "id": 11,
+        "title": "استغلال أدوات التواصل الاجتماعي",
+        "module": "تقنيات الويب",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "كيفية الاستخدام الإيجابي لشبكات التواصل الاجتماعي في التعليم والبحث والتواصل المهني.",
+        "tags": ["تواصل", "شبكات", "اجتماعي"],
+        "date": "2026-05-08",
+        "image": "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+        "id": 12,
+        "title": "البريد الإلكتروني",
+        "module": "تقنيات الويب",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "إنشاء حساب بريد إلكتروني، إرسال واستقبال الرسائل، وإرفاق الملفات بأمان.",
+        "tags": ["بريد", "إيميل", "تواصل"],
+        "date": "2026-05-10",
+        "image": "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+        "id": 13,
+        "title": "إنشاء صفحة ويب",
+        "module": "تقنيات الويب",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "تطبيق عملي لإنشاء صفحة ويب بسيطة باستخدام لغات الترميز الأساسية.",
+        "tags": ["ويب", "تصميم", "تطوير"],
+        "date": "2026-05-12",
+        "image": "https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+        "id": 14,
+        "title": "معالج النصوص 1 (الأنماط والمقاطع)",
+        "module": "المكتبية",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "تنسيق المستندات المتقدم باستخدام الأنماط (Styles) وتقسيم المستند إلى مقاطع (Sections).",
+        "tags": ["Word", "تنسيق", "نصوص"],
+        "date": "2026-05-15",
+        "image": "https://placehold.co/600x400/1e40af/ffffff?text=Microsoft+Word"
+    },
+    {
+        "id": 15,
+        "title": "معالج النصوص 2 (دمج المراسلات)",
+        "module": "المكتبية",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "استخدام خاصية دمج المراسلات (Mail Merge) لإنشاء رسائل وشهادات متعددة آلياً.",
+        "tags": ["Word", "مراسلات", "أوفيس"],
+        "date": "2026-05-18",
+        "image": "https://placehold.co/600x400/1e40af/ffffff?text=Microsoft+Word"
+    },
+    {
+        "id": 16,
+        "title": "مجدول 1 (الصيغ والدوال)",
+        "module": "المكتبية",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "إجراء العمليات الحسابية في Excel باستخدام الصيغ الرياضية والدوال الجاهزة (Functions).",
+        "tags": ["Excel", "دوال", "حسابات"],
+        "date": "2026-05-20",
+        "image": "https://placehold.co/600x400/166534/ffffff?text=Microsoft+Excel"
+    },
+    {
+        "id": 17,
+        "title": "مجدول 2 (فرز البيانات)",
+        "module": "المكتبية",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "كيفية ترتيب البيانات وفرزها (Sorting & Filtering) لتسهيل استخراج المعلومات.",
+        "tags": ["Excel", "فرز", "بيانات"],
+        "date": "2026-05-22",
+        "image": "https://placehold.co/600x400/166534/ffffff?text=Microsoft+Excel"
+    },
+    {
+        "id": 18,
+        "title": "العروض التقديمية 1 (أساسيات PowerPoint)",
+        "module": "المكتبية",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "إعداد شرائح العرض، إدراج النصوص والصور، واختيار التصميم المناسب.",
+        "tags": ["PowerPoint", "عروض", "تقديم"],
+        "date": "2026-05-25",
+        "image": "https://placehold.co/600x400/9a3412/ffffff?text=PowerPoint"
+    },
+    {
+        "id": 19,
+        "title": "العروض التقديمية 2 (الحركات والارتباط التشعبي)",
+        "module": "المكتبية",
+        "level": "السنة الأولى ثانوي",
+        "type": "lesson",
+        "description": "إضافة حركات انتقالية ومخصصة، واستخدام الارتباط التشعبي لإنشاء عروض تفاعلية.",
+        "tags": ["PowerPoint", "حركات", "تفاعلي"],
+        "date": "2026-05-28",
+        "image": "https://placehold.co/600x400/9a3412/ffffff?text=PowerPoint"
+    }
+];
