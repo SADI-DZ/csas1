@@ -1,6 +1,4 @@
-/* ============================================
-   🎨 منصتي التعليمية - ملف الأنماط المُحسّن
-   ============================================ */
+/* ملف الأنماط الرئيسي للمشروع */
 
 /* Variables */
 :root {
@@ -35,7 +33,6 @@
     --transition: 0.3s ease;
     --transition-slow: 0.5s ease;
     
-    /* Fixed: 1 */
 }
 
 /* Dark Theme */
@@ -54,7 +51,6 @@
     --text-main: #f8fafc;
     --text-muted: #b0bec5;
     --border-color: #334155;
-    /* Fixed: 3 */
 }
 
 /* Reset & Base */
@@ -537,7 +533,6 @@ ul {
     transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     will-change: transform;
-    /* Fixed: 1 */
 }
 
 .progress-bar-fill::after {
@@ -1266,7 +1261,6 @@ ul {
     color: #e2e8f0;
     z-index: 0;
     overflow: hidden;
-    /* Fixed: HTML editor scroll overlay sync */
 }
 
 .code-editor {
@@ -1285,7 +1279,6 @@ ul {
     overflow: auto;
     resize: vertical;
     z-index: 1;
-    /* Fixed: HTML editor internal scroll */
 }
 
 .code-token-tag {
@@ -1501,7 +1494,6 @@ ul {
     display: flex;
     gap: 0.75rem;
     justify-content: flex-end;
-    /* Fixed: 8 */
 }
 
 .future-lab-grid {
@@ -2479,7 +2471,6 @@ ul {
     transform: translateY(28px);
     transition: opacity 0.55s ease, transform 0.55s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     will-change: transform;
-    /* Fixed: 1 */
 }
 
 .module-card.visible,
@@ -2745,7 +2736,6 @@ html.font-large {
     .slot-motherboard {
         min-height: 66px;
     }
-    /* Fixed: 14 */
 }
 
 /* ============================================
@@ -2877,7 +2867,6 @@ html.font-large {
 .lab-grid-1 {
     grid-template-columns: 1fr;
     max-width: clamp(300px, 100%, 500px);
-    /* Fixed: 15 */
 }
 
 /* Enhanced module cards in lab page */
@@ -3098,7 +3087,6 @@ html.font-large {
 
 .module-progress-fill[style*="width: 100%"]::after {
     animation: none;
-    /* Fixed: 2 */
 }
 
 .module-1 .module-progress-fill {
