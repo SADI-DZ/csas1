@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!editor || !highlight || !varsBody || !outputEl || !runBtn || !stepBtn || !resetBtn) return;
 
-  /* ── Language ────────────────────────────────── */
   let currentLang = 'en';
+  let isRunning = false;
 
   const DEFAULT_PROGRAMS = {
     en: `Algorithm example
@@ -30,7 +30,6 @@ Debut
 Fin`
   };
 
-  /* ── Keyword sets (all lowercase for matching) ── */
   const KW_ALGORITHM = ['algorithm', 'algorithme'];
   const KW_VAR = ['var', 'variable', 'variables'];
   const KW_START = ['start', 'debut', 'début'];
@@ -53,7 +52,6 @@ Fin`
   const HL_LOGIC = ['and', 'or', 'not', 'true', 'false',
     'et', 'ou', 'non', 'vrai', 'faux'];
 
-  /* ── VM State ───────────────────────────────── */
   /** @type {{ lines: string[], blocks: any[], pc: number, vars: Record<string, any>, out: string[], halted: boolean }} */
   let vm = {
     lines: [],
@@ -64,7 +62,6 @@ Fin`
     halted: false
   };
 
-  /* ── Helpers ────────────────────────────────── */
   const sanitizeExpr = (expr) => {
     const s = String(expr ?? '').trim();
     // Allow: letters/numbers/underscore/space/quotes/operators/parens/dot/comma/accented chars
@@ -119,7 +116,6 @@ Fin`
     return null;
   };
 
-  /* ── Block Parser ───────────────────────────── */
   const rebuildBlocks = (lines) => {
     const blocks = [];
     const stack = [];
@@ -184,7 +180,6 @@ Fin`
     return { blocks, mapIfByLine, mapWhileByLine };
   };
 
-  /* ── Line Kind Detection ────────────────────── */
   const getLineKind = (line) => {
     const s = normalizeLine(line).trim();
     const low = s.toLowerCase();
@@ -235,7 +230,6 @@ Fin`
     return { kind: 'unknown', text: s };
   };
 
-  /* ── Rendering ──────────────────────────────── */
   const renderVars = () => {
     const entries = Object.entries(vm.vars);
     if (!entries.length) {
@@ -342,7 +336,6 @@ Fin`
     }
   };
 
-  /* ── VM Control ─────────────────────────────── */
   const resetVM = () => {
     vm.lines = editor.value.replace(/\r\n/g, '\n').split('\n');
     const { blocks, mapIfByLine, mapWhileByLine } = rebuildBlocks(vm.lines);
@@ -369,7 +362,6 @@ Fin`
     }
   };
 
-  /* ── Step Execution ─────────────────────────── */
   const stepOnce = async () => {
     if (vm.halted) return;
     jumpToNextExecutable();
@@ -491,7 +483,6 @@ Fin`
     renderVars();
     renderOutput();
     renderHighlight();
-    /* Fixed: 9 */
   };
 
   const runAll = async () => {
@@ -517,10 +508,8 @@ Fin`
       }
     };
     await runChunk();
-    /* Fixed: 10 */
   };
 
-  /* ── Editor UX ──────────────────────────────── */
   const syncScroll = () => {
     highlight.scrollTop = editor.scrollTop;
     highlight.scrollLeft = editor.scrollLeft;
@@ -541,10 +530,21 @@ Fin`
   editor.addEventListener('scroll', syncScroll);
 
   runBtn.addEventListener('click', async () => {
-    resetVM();
-    await runAll();
+    if (isRunning) return;
+    isRunning = true;
+    runBtn.disabled = true;
+    stepBtn.disabled = true;
+    try {
+      resetVM();
+      await runAll();
+    } finally {
+      isRunning = false;
+      runBtn.disabled = false;
+      stepBtn.disabled = false;
+    }
   });
   stepBtn.addEventListener('click', async () => {
+    if (isRunning) return;
     if (!vm.blocks?.length && editor.value.trim()) {
       resetVM();
     }
@@ -555,7 +555,6 @@ Fin`
     resetVM();
   });
 
-  /* ── Language Toggle ────────────────────────── */
   if (langToggle) {
     const langBtns = langToggle.querySelectorAll('.algo-lang-btn');
     langBtns.forEach(btn => {
@@ -572,7 +571,6 @@ Fin`
     });
   }
 
-  /* ── Init ───────────────────────────────────── */
   if (!editor.value.trim()) editor.value = DEFAULT_PROGRAMS[currentLang];
   resetVM();
 });

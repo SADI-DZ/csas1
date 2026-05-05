@@ -1,11 +1,4 @@
-/**
- * منصتي التعليمية - JavaScript مُحسّن
- * Main Application Logic
- */
-
-// ============================================
-// 🎯 DOM Elements
-// ============================================
+/* منطق التطبيق الرئيسي */
 const elements = {
     contentGrid: document.getElementById('contentGrid'),
     searchInput: document.getElementById('searchInput'),
@@ -41,14 +34,10 @@ const elements = {
     resetActiveEditorBtn: document.getElementById('resetActiveEditorBtn') || document.getElementById('resetHtmlEditorBtn')
 };
 
-// Filter elements
 const filters = {
     type: document.querySelectorAll('input[name="type"]')
 };
 
-// ============================================
-// 📊 Application State
-// ============================================
 const state = {
     allData: [],
     completedItems: JSON.parse(localStorage.getItem('completedItems')) || [],
@@ -58,7 +47,6 @@ const state = {
     view: 'modules' // 'modules' or 'content'
 };
 
-// Module definitions
 const modules = [
     {
         id: 'بيئة التعامل مع الحاسوب',
@@ -90,9 +78,10 @@ const modules = [
     }
 ];
 
-// ============================================
-// 🚀 Initialization
-// ============================================
+const SEARCH_DEBOUNCE_MS = 300;
+const NAVBAR_SCROLL_THRESHOLD = 50;
+const CARD_OBSERVER_THRESHOLD = 0.1;
+
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initFontSize();
@@ -108,9 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (elements.searchInput && savedSearch) elements.searchInput.value = savedSearch;
     const savedModule = sessionStorage.getItem('lastModule');
     if (savedModule) selectModule(savedModule);
-    updateGamificationUI(); // نظام النقاط والشارات
+    updateGamificationUI();
     initHtmlLab();
-    /* Fixed: 6 */
 });
 
 
@@ -149,9 +137,6 @@ function inferDifficulty(item) {
     return 'easy';
 }
 
-// ============================================
-// 🎨 Theme Management
-// ============================================
 function toggleTheme() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
 
@@ -181,9 +166,6 @@ function updateThemeAriaLabel() {
     }
 }
 
-// ============================================
-// 🔤 Font Size Management
-// ============================================
 function toggleFontSize() {
     const currentSize = localStorage.getItem('fontSize') || 'medium';
     let newSize;
@@ -197,9 +179,6 @@ function toggleFontSize() {
     localStorage.setItem('fontSize', newSize);
 }
 
-// ============================================
-// 📚 Modules Rendering
-// ============================================
 function renderModules() {
     if (!elements.modulesGrid) return;
 
@@ -213,7 +192,15 @@ function renderModules() {
 
         const card = document.createElement('div');
         card.className = `module-card ${mod.moduleClass}`;
+        card.setAttribute('role', 'button');
+        card.tabIndex = 0;
         card.onclick = () => selectModule(mod.id);
+        card.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                selectModule(mod.id);
+            }
+        });
 
         card.innerHTML = `
             <div class="module-icon">
@@ -252,9 +239,6 @@ function renderModules() {
     }
 }
 
-// ============================================
-// 🔄 View Switching
-// ============================================
 function selectModule(moduleId) {
     state.currentModule = moduleId;
     state.view = 'content';
@@ -281,7 +265,6 @@ function selectModule(moduleId) {
 
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    /* Fixed: 6 */
 }
 
 function showModulesView() {
@@ -303,7 +286,6 @@ function showModulesView() {
     } else {
         document.getElementById('modulesSection')?.scrollIntoView({ behavior: 'smooth' });
     }
-    /* Fixed: 6 */
 }
 
 function updateModuleProgress() {
@@ -320,9 +302,6 @@ function updateModuleProgress() {
     if (elements.progressPercentage) elements.progressPercentage.textContent = percentage;
 }
 
-// ============================================
-// 📝 Event Listeners Setup
-// ============================================
 function initEventListeners() {
     elements.themeToggle?.addEventListener('click', toggleTheme);
     elements.fontToggle?.addEventListener('click', toggleFontSize);
@@ -336,7 +315,7 @@ function initEventListeners() {
 
     elements.searchInput?.addEventListener('input', () => {
         clearTimeout(state.searchDebounceTimer);
-        state.searchDebounceTimer = setTimeout(filterData, 300);
+        state.searchDebounceTimer = setTimeout(filterData, SEARCH_DEBOUNCE_MS);
     });
 
     elements.searchBtn?.addEventListener('click', filterData);
@@ -681,7 +660,7 @@ function handleGridClick(e) {
     if (!target) return;
 
     if (target.dataset.action === 'open' && target.dataset.id) {
-        openModal(parseInt(target.dataset.id));
+        openModal(parseInt(target.dataset.id, 10));
     } else if (target.dataset.moduleId) {
         selectModule(target.dataset.moduleId);
     }
@@ -721,9 +700,6 @@ function closeMobileNav() {
     }
 }
 
-// ============================================
-// 🔍 Filter Logic
-// ============================================
 function getActiveFilter(name) {
     const active = document.querySelector(`input[name="${name}"]:checked`);
     return active ? active.value : 'all';
@@ -737,10 +713,12 @@ function filterData() {
     const moduleItems = state.allData.filter(item => item.module === state.currentModule);
 
     const filtered = moduleItems.filter(item => {
+        const description = typeof item.description === 'string' ? item.description : '';
+        const tags = Array.isArray(item.tags) ? item.tags : [];
         const matchSearch = searchTerm === '' ||
             item.title.toLowerCase().includes(searchTerm) ||
-            item.description.toLowerCase().includes(searchTerm) ||
-            item.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+            description.toLowerCase().includes(searchTerm) ||
+            tags.some(tag => String(tag).toLowerCase().includes(searchTerm));
 
         const matchType = activeType === 'all' || item.type === activeType;
         return matchSearch && matchType;
@@ -758,9 +736,6 @@ function resetFilters() {
     filterData();
 }
 
-// ============================================
-// 📦 Content Rendering
-// ============================================
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
@@ -788,12 +763,12 @@ function renderContent(data) {
     }
 
     if (data.length === 0) {
-        elements.emptyState.style.display = 'block';
+        if (elements.emptyState) elements.emptyState.style.display = 'block';
         grid.innerHTML = '';
         return;
     }
 
-    elements.emptyState.style.display = 'none';
+    if (elements.emptyState) elements.emptyState.style.display = 'none';
 
     // Use DocumentFragment for batch DOM insertion (faster)
     const fragment = document.createDocumentFragment();
@@ -850,7 +825,7 @@ function createCardElement(item) {
                 ${!item.isReady ? '<span class="badge badge-coming-soon">قيد الإعداد</span>' : ''}
             </div>
             <div class="card-tags">
-                ${item.tags.map(tag => `<span class="tag">#${escapeHtml(tag)}</span>`).join('')}
+                ${(Array.isArray(item.tags) ? item.tags : []).map(tag => `<span class="tag">#${escapeHtml(tag)}</span>`).join('')}
             </div>
         </div>
         <div class="card-footer">
@@ -864,9 +839,6 @@ function createCardElement(item) {
     return card;
 }
 
-// ============================================
-// 📈 Progress Tracking
-// ============================================
 function updateProgressUI() {
     updateModuleProgress();
 }
@@ -890,16 +862,13 @@ function toggleCompleted(id) {
     }
 
     if (elements.modal?.classList.contains('active')) {
-        const modalItemId = parseInt(elements.modalBody?.dataset?.itemId);
+        const modalItemId = parseInt(elements.modalBody?.dataset?.itemId || '', 10);
         if (modalItemId === id) {
             openModal(id);
         }
     }
 }
 
-// ============================================
-// 🎭 Modal Management
-// ============================================
 function initModal() {
     if (!elements.modal) return;
 
@@ -1027,9 +996,6 @@ function closeModal() {
     }
 }
 
-// ============================================
-// ✨ Animations (Optimized)
-// ============================================
 let cardObserver = null;
 
 function initScrollAnimations() {
@@ -1048,7 +1014,7 @@ function initScrollAnimations() {
     }, {
         root: null,
         rootMargin: '0px',
-        threshold: 0.1
+        threshold: CARD_OBSERVER_THRESHOLD
     });
 
     observeCards();
@@ -1061,9 +1027,6 @@ function observeCards() {
     });
 }
 
-// ============================================
-// 📜 Navbar Scroll Effect (Optimized with RAF)
-// ============================================
 function initNavbarScroll() {
     const navbar = document.querySelector('.navbar');
     if (!navbar) return;
@@ -1073,7 +1036,7 @@ function initNavbarScroll() {
     window.addEventListener('scroll', () => {
         if (!ticking) {
             requestAnimationFrame(() => {
-                if (window.scrollY > 50) {
+                if (window.scrollY > NAVBAR_SCROLL_THRESHOLD) {
                     navbar.classList.add('scrolled');
                 } else {
                     navbar.classList.remove('scrolled');
@@ -1085,17 +1048,10 @@ function initNavbarScroll() {
     }, { passive: true });
 }
 
-// ============================================
-// 🔒 Content Protection
-// ============================================
 function initContentProtection() {
-    // Content protection removed - ineffective and breaks accessibility
-    /* Fixed: 7 */
+    // intentionally empty: blocking copy/selection harms accessibility
 }
 
-// ============================================
-// 👥 Visitor Counter
-// ============================================
 function updateVisitorCounter() {
     const counterEl = document.getElementById('visitorCount');
     if (!counterEl) return;
@@ -1107,12 +1063,8 @@ function updateVisitorCounter() {
         sessionStorage.setItem('counted', '1');
     }
     counterEl.textContent = count.toLocaleString('ar');
-    /* Fixed: 5 */
 }
 
-// ============================================
-// 🎮 Gamification System (نظام النقاط والشارات)
-// ============================================
 const BADGES = {
     FIRST_LESSON: { id: 'first_lesson', name: 'البداية', icon: 'ph-star', desc: 'أنجز أول درس', points: 10 },
     MODULE_MASTER: { id: 'module_master', name: 'متخصص المحور', icon: 'ph-trophy', desc: 'أتمم محوراً كاملاً', points: 50 },
@@ -1176,7 +1128,6 @@ function checkAndAwardBadges() {
 
     localStorage.setItem('earnedBadges', JSON.stringify(earned));
     return newBadges;
-    /* Fixed: 4 */
 }
 
 function showInputModal(label) {
@@ -1206,7 +1157,6 @@ function showInputModal(label) {
             if (e.key === 'Escape') done('');
         });
     });
-    /* Fixed: 8 */
 }
 
 function showBadgeNotification(badge) {
@@ -1264,9 +1214,6 @@ function updateGamificationUI() {
     }
 }
 
-// ============================================
-// 🔗 Global Functions
-// ============================================
 window.openModal = openModal;
 window.closeModal = closeModal;
 window.toggleCompleted = toggleCompleted;

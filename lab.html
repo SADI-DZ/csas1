@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy"
         content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;">
-    <!-- Fixed: 13 -->
     <title>منصتي التعليمية | التعلم أسهل</title>
     <meta name="description"
         content="منصة تعليمية لطلاب المرحلة الثانوية تحتوي على دروس وتمارين مبسطة في المعلوماتية وتقنيات الويب والمكتبية.">
@@ -76,13 +75,6 @@
                             </div>
                         </div>
 
-                        <div class="module-card module-3" role="button" tabindex="0" data-lab-target="activity-build-pc" data-lab-title="محاكاة تجميع حاسوب" aria-label="الانتقال إلى نشاط: محاكاة تجميع حاسوب">
-                            <div class="module-icon"><i class="ph ph-cpu"></i></div>
-                            <div class="module-content">
-                                <h3 class="module-title">محاكاة تجميع حاسوب</h3>
-                                <p class="module-desc">قسم تفاعلي لتعلم قطع الحاسوب وتركيبها.</p>
-                            </div>
-                        </div>
 
                         <div class="module-card module-4" role="button" tabindex="0" data-lab-target="activity-win11" data-lab-title="محاكاة تثبيت Windows 11" aria-label="الانتقال إلى نشاط: محاكاة تثبيت Windows 11">
                             <div class="module-icon"><i class="ph ph-windows-logo"></i></div>
@@ -305,81 +297,12 @@
                                 <div class="algo-panel">
                                     <h4 class="algo-panel-title"><i class="ph ph-terminal"></i> الإخراج</h4>
                                     <pre id="algoOutput" class="algo-output" aria-label="مخرجات الخوارزمية" aria-live="polite" aria-atomic="false"></pre>
-                                    <!-- Fixed: 11, 12 -->
                                 </div>
                             </div>
                         </article>
                     </div>
                 </div>
 
-                <div class="lab-activity" id="activity-build-pc" hidden>
-                    <div class="lab-hero" aria-label="مقدمة تجميع حاسوب">
-                        <div class="lab-hero-grid" aria-hidden="true"></div>
-                        <div class="lab-hero-orb orb-1" aria-hidden="true"></div>
-                        <div class="lab-hero-orb orb-2" aria-hidden="true"></div>
-                        <div class="lab-hero-content">
-                            <span class="lab-hero-badge"><i class="ph ph-cpu"></i> عتاد</span>
-                            <h3 class="lab-hero-title">محاكاة تجميع حاسوب</h3>
-                            <p class="lab-hero-subtitle">تعلم كيفية تجميع مكونات الحاسوب خطوة بخطوة من خلال اختيار القطع وتركيبها في أماكنها الصحيحة.</p>
-                            <div class="lab-hero-tips" aria-label="نصائح سريعة">
-                                <span class="tip"><i class="ph ph-mouse"></i> اختر قطعة للتركيب</span>
-                                <span class="tip"><i class="ph ph-cube"></i> مشاهدة ثلاثية الأبعاد</span>
-                                <span class="tip"><i class="ph ph-arrows-clockwise"></i> اسحب للدوران</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="lab-grid pc-sim-grid">
-                        <!-- Inventory Panel -->
-                        <article class="lab-card">
-                            <div class="lab-card-header">
-                                <h3><i class="ph ph-archive-box"></i> صندوق القطع</h3>
-                                <div class="lab-actions">
-                                    <button id="pcSimSaveBtn" class="btn-reset" type="button">
-                                        <i class="ph ph-floppy-disk"></i>
-                                        حفظ التجميعة
-                                    </button>
-                                    <button id="pcSimResetBtn" class="btn-reset" type="button">
-                                        <i class="ph ph-arrow-counter-clockwise"></i>
-                                        إعادة التجميع
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="pc-inventory" id="pcInventory">
-                                <!-- Items will be injected via JS -->
-                            </div>
-                            <div class="pc-side-panel">
-                                <h4><i class="ph ph-list-checks"></i> خطوات التركيب</h4>
-                                <ol id="pcStepsList" class="pc-steps-list"></ol>
-                            </div>
-                            <div class="pc-side-panel">
-                                <h4><i class="ph ph-warning-circle"></i> تنبيهات التوافق</h4>
-                                <ul id="pcErrorList" class="pc-error-list"></ul>
-                            </div>
-                            <div class="pc-side-panel">
-                                <h4><i class="ph ph-hard-drives"></i> التجميعات المحفوظة</h4>
-                                <div id="pcSavedBuilds" class="pc-saved-builds"></div>
-                            </div>
-                        </article>
-
-                        <!-- Build Area Panel -->
-                        <article class="lab-card">
-                            <div class="lab-card-header">
-                                <h3><i class="ph ph-desktop-tower"></i> صندوق الحاسوب (Case)</h3>
-                                <span class="lab-note" id="pcSimStatus">في انتظار القطع...</span>
-                            </div>
-                            <div class="pc-build-area" id="pcBuildArea">
-                                <div class="pc-viewport" id="pc3dViewport" aria-label="مشهد ثلاثي الأبعاد لتجميع الحاسوب"></div>
-                                <p class="pc-viewport-hint">اسحب داخل المشهد للدوران، وعجلة الفأرة للتقريب/الإبعاد.</p>
-                            </div>
-                            <div class="pc-info-panel" id="pcInfoPanel">
-                                <h4 id="pcInfoTitle">اختر قطعة لعرض معلوماتها</h4>
-                                <p id="pcInfoDesc">انقر على أي قطعة من صندوق القطع أو على المكون داخل المشهد ثلاثي الأبعاد.</p>
-                                <div id="pcInfoSpecs" class="pc-spec-list"></div>
-                            </div>
-                        </article>
-                    </div>
-                </div>
 
                 <div class="lab-activity" id="activity-win11" hidden>
                     <div class="future-lab-grid">
@@ -481,17 +404,7 @@
     <script src="data/data.js" defer></script>
     <script src="js/main.js" defer></script>
     <script src="js/algo-lab.js" defer></script>
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.164.1/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.164.1/examples/jsm/"
-            }
-        }
-    </script>
-    <script type="module" src="js/sim-pc.js"></script>
     <script defer>
-        // Lab-only navigation (modules -> activity), without touching homepage logic.
         document.addEventListener('DOMContentLoaded', () => {
             const modulesSection = document.getElementById('labModulesSection');
             const activitiesSection = document.getElementById('labActivitiesSection');
@@ -542,10 +455,8 @@
 
             backBtn.addEventListener('click', showModules);
 
-            // Override logo action in lab page only.
             window.showModulesView = showModules;
 
-            // Start with modules view.
             showModules();
         });
     </script>
