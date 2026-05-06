@@ -1,4 +1,5 @@
 /* منطق التطبيق الرئيسي */
+
 const elements = {
     contentGrid: document.getElementById('contentGrid'),
     searchInput: document.getElementById('searchInput'),
@@ -29,13 +30,17 @@ const elements = {
     jsEditor: document.getElementById('jsEditor'),
     jsHighlight: document.getElementById('jsHighlight'),
     htmlPreviewFrame: document.getElementById('htmlPreviewFrame'),
+    htmlAutocomplete: document.getElementById('htmlAutocomplete'),
     // Support multiple page variants (lab.html uses different ids)
     runPreviewBtn: document.getElementById('runPreviewBtn') || document.getElementById('runHtmlPreviewBtn'),
     resetActiveEditorBtn: document.getElementById('resetActiveEditorBtn') || document.getElementById('resetHtmlEditorBtn')
 };
 
+// Elements are exported for other modules
+// window.elements = elements; // Removed global assignment
+
 const filters = {
-    type: document.querySelectorAll('input[name="type"]')
+    type: Array.from(document.querySelectorAll('input[name="type"]'))
 };
 
 const state = {
@@ -89,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initEventListeners();
     initModal();
     initScrollAnimations();
-    initContentProtection();
     initNavbarScroll();
     updateVisitorCounter();
     renderModules();
@@ -98,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedModule = sessionStorage.getItem('lastModule');
     if (savedModule) selectModule(savedModule);
     updateGamificationUI();
-    initHtmlLab();
 });
 
 
@@ -182,11 +185,17 @@ function toggleFontSize() {
 function renderModules() {
     if (!elements.modulesGrid) return;
 
+    const moduleMap = state.allData.reduce((map, item) => {
+        if (!map[item.module]) map[item.module] = [];
+        map[item.module].push(item);
+        return map;
+    }, {});
+
     // Use DocumentFragment for batch DOM insertion
     const fragment = document.createDocumentFragment();
 
     modules.forEach((mod) => {
-        const moduleItems = state.allData.filter(item => item.module === mod.id);
+        const moduleItems = moduleMap[mod.id] || [];
         const completedInModule = moduleItems.filter(item => state.completedItems.includes(item.id)).length;
         const progress = moduleItems.length > 0 ? Math.round((completedInModule / moduleItems.length) * 100) : 0;
 
@@ -305,7 +314,7 @@ function updateModuleProgress() {
 function initEventListeners() {
     elements.themeToggle?.addEventListener('click', toggleTheme);
     elements.fontToggle?.addEventListener('click', toggleFontSize);
-    elements.navBackBtn?.addEventListener('click', window.showModulesView);
+    elements.navBackBtn?.addEventListener('click', showModulesView);
 
     // Event delegation for content grid and modules grid
     const mainEl = elements.contentGrid || elements.modulesGrid;
@@ -324,334 +333,6 @@ function initEventListeners() {
     elements.resetFiltersBtn?.addEventListener('click', resetFilters);
 
     initMobileNav();
-}
-
-function initHtmlLab() {
-    if (!elements.htmlEditor || !elements.htmlPreviewFrame) return;
-
-    const stateLab = {
-        activeWorkshop: 'html' // html | css | js
-    };
-
-    const getActiveEditor = () => {
-        if (stateLab.activeWorkshop === 'css') return elements.cssEditor;
-        if (stateLab.activeWorkshop === 'js') return elements.jsEditor;
-        return elements.htmlEditor;
-    };
-
-    const getActiveHighlight = () => {
-        if (stateLab.activeWorkshop === 'css') return elements.cssHighlight;
-        if (stateLab.activeWorkshop === 'js') return elements.jsHighlight;
-        return elements.htmlHighlight;
-    };
-
-    const getDefaultsByWorkshop = (workshop) => {
-        if (workshop === 'css') return defaultCssTemplate;
-        if (workshop === 'js') return defaultJsTemplate;
-        return defaultHtmlTemplate;
-    };
-
-    const composeSrcDoc = () => {
-        const html = elements.htmlEditor?.value ?? '';
-        const css = elements.cssEditor?.value ?? '';
-        const js = elements.jsEditor?.value ?? '';
-
-        // Inject CSS/JS without forcing the user to write <style>/<script>
-        return `<!DOCTYPE html>
-${html}
-<!-- injected by lab -->
-<style>${css}</style>
-<script>
-try {
-${js}
-} catch (e) {
-  const pre = document.createElement('pre');
-  pre.style.cssText = 'background:#0f172a;color:#e2e8f0;padding:12px;border-radius:12px;max-width:820px;margin:18px auto;white-space:pre-wrap;direction:ltr;text-align:left;';
-  pre.textContent = 'JS Error: ' + (e && e.message ? e.message : String(e));
-  document.body.appendChild(pre);
-}
-</script>`;
-    };
-
-    const flashPreview = () => {
-        const frame = elements.htmlPreviewFrame;
-        if (!frame) return;
-        frame.classList.remove('is-updated');
-        void frame.offsetWidth;
-        frame.classList.add('is-updated');
-    };
-
-    const renderPreview = (opts = { flash: false }) => {
-        elements.htmlPreviewFrame.srcdoc = composeSrcDoc();
-        if (opts.flash) flashPreview();
-    };
-
-    const highlightByWorkshop = (workshop, code) => {
-        if (workshop === 'css') return highlightCssCode(code);
-        if (workshop === 'js') return highlightJsCode(code);
-        return highlightHtmlCode(code);
-    };
-
-    const renderHighlight = (workshop = stateLab.activeWorkshop) => {
-        const editor = workshop === 'css' ? elements.cssEditor : workshop === 'js' ? elements.jsEditor : elements.htmlEditor;
-        const highlight = workshop === 'css' ? elements.cssHighlight : workshop === 'js' ? elements.jsHighlight : elements.htmlHighlight;
-        if (!editor || !highlight) return;
-        highlight.innerHTML = `${highlightByWorkshop(workshop, editor.value)}\n`;
-    };
-
-    const syncScroll = () => {
-        const editor = getActiveEditor();
-        const highlight = getActiveHighlight();
-        if (!editor || !highlight) return;
-        highlight.scrollTop = editor.scrollTop;
-        highlight.scrollLeft = editor.scrollLeft;
-    };
-
-    const renderAll = (opts = { flash: false }) => {
-        renderPreview(opts);
-        renderHighlight('html');
-        renderHighlight('css');
-        renderHighlight('js');
-        syncScroll();
-    };
-
-    // Defaults
-    if (elements.htmlEditor && !elements.htmlEditor.value.trim()) elements.htmlEditor.value = defaultHtmlTemplate;
-    if (elements.cssEditor && !elements.cssEditor.value.trim()) elements.cssEditor.value = defaultCssTemplate;
-    if (elements.jsEditor && !elements.jsEditor.value.trim()) elements.jsEditor.value = defaultJsTemplate;
-
-    // Tabs logic
-    const tabs = Array.from(document.querySelectorAll('.workshop-tab'));
-    const panels = Array.from(document.querySelectorAll('.workshop-panel'));
-
-    const setActiveWorkshop = (workshop) => {
-        stateLab.activeWorkshop = workshop;
-
-        tabs.forEach(t => {
-            const isActive = t.dataset.workshop === workshop;
-            t.classList.toggle('is-active', isActive);
-            t.setAttribute('aria-selected', String(isActive));
-            t.tabIndex = isActive ? 0 : -1;
-        });
-
-        panels.forEach(p => {
-            const isActive = p.dataset.panel === workshop;
-            p.classList.toggle('is-active', isActive);
-            p.hidden = !isActive;
-        });
-
-        syncScroll();
-        const editor = getActiveEditor();
-        if (editor) editor.focus();
-    };
-
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => setActiveWorkshop(tab.dataset.workshop));
-        tab.addEventListener('keydown', (e) => {
-            if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-            e.preventDefault();
-            const idx = tabs.indexOf(tab);
-            const next = e.key === 'ArrowLeft'
-                ? tabs[Math.min(tabs.length - 1, idx + 1)]
-                : tabs[Math.max(0, idx - 1)];
-            next?.click();
-        });
-    });
-
-    // Run + Reset (active)
-    elements.runPreviewBtn?.addEventListener('click', () => {
-        const btn = elements.runPreviewBtn;
-        const icon = btn?.querySelector('i');
-        const previousIconClass = icon?.className;
-
-        if (btn) btn.classList.add('is-busy');
-        if (icon) icon.className = 'ph ph-circle-notch';
-
-        renderAll({ flash: true });
-
-        window.setTimeout(() => {
-            if (btn) btn.classList.remove('is-busy');
-            if (icon && previousIconClass) icon.className = previousIconClass;
-        }, 450);
-    });
-
-    elements.resetActiveEditorBtn?.addEventListener('click', () => {
-        const editor = getActiveEditor();
-        if (!editor) return;
-        editor.value = getDefaultsByWorkshop(stateLab.activeWorkshop);
-        renderAll({ flash: true });
-    });
-
-    // Live updates + scroll sync + editor helpers
-    const bindEditor = (workshop, editor) => {
-        if (!editor) return;
-        editor.addEventListener('input', () => renderAll());
-        editor.addEventListener('scroll', syncScroll);
-        editor.addEventListener('keydown', (e) => {
-            // helpers for HTML only (tab + indent + closing tags)
-            if (workshop === 'html') handleHtmlEditorKeydown(e);
-            else handleCodeEditorKeydown(e);
-        });
-    };
-
-    bindEditor('html', elements.htmlEditor);
-    bindEditor('css', elements.cssEditor);
-    bindEditor('js', elements.jsEditor);
-
-    // Start
-    setActiveWorkshop('html');
-    renderAll({ flash: true });
-}
-
-function highlightHtmlCode(code) {
-    let escaped = escapeHtml(code);
-
-    escaped = escaped.replace(/&lt;!--[\s\S]*?--&gt;/g, (match) => {
-        return `<span class="code-token-comment">${match}</span>`;
-    });
-
-    escaped = escaped.replace(/&lt;!DOCTYPE[\s\S]*?&gt;/gi, (match) => {
-        return `<span class="code-token-doctype">${match}</span>`;
-    });
-
-    escaped = escaped.replace(/(&lt;\/?)([a-zA-Z][\w:-]*)([^&]*?)(\/?&gt;)/g, (_, open, tag, attrs, close) => {
-        const safeAttrs = attrs.replace(/([a-zA-Z_:][\w:.-]*)(\s*=\s*)(".*?"|'.*?')/g, (m, name, eq, value) => {
-            return `<span class="code-token-attr">${name}</span>${eq}<span class="code-token-value">${value}</span>`;
-        });
-
-        return `${open}<span class="code-token-tag">${tag}</span>${safeAttrs}${close}`;
-    });
-
-    return escaped;
-}
-
-function highlightCssCode(code) {
-    let escaped = escapeHtml(code);
-
-    // Comments /* ... */
-    escaped = escaped.replace(/\/\*[\s\S]*?\*\//g, (m) => `<span class="code-token-comment">${m}</span>`);
-    // Strings
-    escaped = escaped.replace(/(".*?"|'.*?')/g, (m) => `<span class="code-token-value">${m}</span>`);
-    // Selectors (very light)
-    escaped = escaped.replace(/^([^{]+)(\{)/gm, (m, sel, brace) => {
-        return `<span class="code-token-tag">${sel.trim()}</span> ${brace}`;
-    });
-    // Properties: name:
-    escaped = escaped.replace(/(^|\s)([a-zA-Z-]+)(\s*:)/g, (m, pre, name, colon) => {
-        return `${pre}<span class="code-token-attr">${name}</span>${colon}`;
-    });
-
-    return escaped;
-}
-
-function highlightJsCode(code) {
-    let escaped = escapeHtml(code);
-
-    // Comments
-    escaped = escaped.replace(/\/\/.*$/gm, (m) => `<span class="code-token-comment">${m}</span>`);
-    escaped = escaped.replace(/\/\*[\s\S]*?\*\//g, (m) => `<span class="code-token-comment">${m}</span>`);
-    // Strings
-    escaped = escaped.replace(/(".*?"|'.*?'|`[\s\S]*?`)/g, (m) => `<span class="code-token-value">${m}</span>`);
-    // Keywords
-    escaped = escaped.replace(/\b(const|let|var|function|return|if|else|for|while|try|catch|new|class|async|await)\b/g, (m) => {
-        return `<span class="code-token-doctype">${m}</span>`;
-    });
-
-    return escaped;
-}
-
-function handleCodeEditorKeydown(e) {
-    const textarea = e.target;
-    if (!(textarea instanceof HTMLTextAreaElement)) return;
-
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-
-    if (e.key === 'Tab') {
-        e.preventDefault();
-        const tab = '  ';
-        textarea.value = textarea.value.substring(0, start) + tab + textarea.value.substring(end);
-        textarea.selectionStart = textarea.selectionEnd = start + tab.length;
-        textarea.dispatchEvent(new Event('input', { bubbles: true }));
-    }
-}
-
-function handleHtmlEditorKeydown(e) {
-    if (!elements.htmlEditor) return;
-
-    const textarea = elements.htmlEditor;
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-
-    // دعم زر Tab
-    if (e.key === 'Tab') {
-        e.preventDefault();
-        const tab = '  '; // مسافتين
-        textarea.value = textarea.value.substring(0, start) + tab + textarea.value.substring(end);
-        textarea.selectionStart = textarea.selectionEnd = start + tab.length;
-        textarea.dispatchEvent(new Event('input', { bubbles: true }));
-        return;
-    }
-
-    // دعم زر Enter مع الإزاحة التلقائية (Auto-indent)
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        const beforeCursor = textarea.value.substring(0, start);
-        const afterCursor = textarea.value.substring(end);
-
-        // إيجاد بداية السطر الحالي
-        const lastNewLineIndex = beforeCursor.lastIndexOf('\n');
-        const currentLine = beforeCursor.substring(lastNewLineIndex + 1);
-
-        // حساب المسافات البادئة للسطر الحالي
-        const match = currentLine.match(/^\s*/);
-        let indentation = match ? match[0] : '';
-
-        // إذا كان السطر ينتهي بوسم فتح، أضف مسافة بادئة إضافية
-        if (currentLine.trim().endsWith('>') && !currentLine.trim().match(/<\/[^>]+>$/) && !currentLine.trim().endsWith('/>')) {
-            indentation += '  ';
-
-            // إضافة سطر جديد آخر للإغلاق إذا كان المؤشر بين وسمين
-            if (afterCursor.trim().startsWith('</')) {
-                const insertion = '\n' + indentation;
-                const closingIndentation = match ? match[0] : '';
-                textarea.value = beforeCursor + insertion + '\n' + closingIndentation + afterCursor;
-                textarea.selectionStart = textarea.selectionEnd = start + insertion.length;
-                textarea.dispatchEvent(new Event('input', { bubbles: true }));
-                return;
-            }
-        }
-
-        const insertion = '\n' + indentation;
-        textarea.value = beforeCursor + insertion + afterCursor;
-        textarea.selectionStart = textarea.selectionEnd = start + insertion.length;
-        textarea.dispatchEvent(new Event('input', { bubbles: true }));
-        return;
-    }
-
-    // دعم الإغلاق التلقائي للوسوم (>)
-    if (e.key === '>') {
-        if (start !== end) return;
-
-        const beforeCursor = textarea.value.slice(0, start);
-        const afterCursor = textarea.value.slice(start);
-        const openingTagMatch = beforeCursor.match(/<([a-zA-Z][\w:-]*)([^<>]*)$/);
-
-        if (!openingTagMatch) return;
-        if (openingTagMatch[0].startsWith('</')) return;
-        if (openingTagMatch[2].trim().endsWith('/')) return;
-
-        const tagName = openingTagMatch[1].toLowerCase();
-        const voidTags = ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr'];
-        if (voidTags.includes(tagName)) return;
-
-        e.preventDefault();
-        const insertion = `></${tagName}>`;
-        textarea.value = `${beforeCursor}${insertion}${afterCursor}`;
-        const cursorPos = start + 1;
-        textarea.setSelectionRange(cursorPos, cursorPos);
-        textarea.dispatchEvent(new Event('input', { bubbles: true }));
-    }
 }
 
 // Event delegation handler for grid interactions
@@ -701,6 +382,11 @@ function closeMobileNav() {
 }
 
 function getActiveFilter(name) {
+    if (name === 'type') {
+        const active = filters.type.find(radio => radio.checked);
+        return active ? active.value : 'all';
+    }
+
     const active = document.querySelector(`input[name="${name}"]:checked`);
     return active ? active.value : 'all';
 }
@@ -731,7 +417,9 @@ function filterData() {
 function resetFilters() {
     if (elements.searchInput) elements.searchInput.value = '';
 
-    document.querySelector('input[name="type"][value="all"]')?.click();
+    filters.type.forEach(radio => {
+        radio.checked = radio.value === 'all';
+    });
 
     filterData();
 }
@@ -741,6 +429,8 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
+
+// window.escapeHtml = escapeHtml; // ESM handle this via export
 
 function safeImageUrl(url) {
     if (!url) return 'https://placehold.co/400x250/4f46e5/ffffff?text=صورة';
@@ -1048,10 +738,6 @@ function initNavbarScroll() {
     }, { passive: true });
 }
 
-function initContentProtection() {
-    // intentionally empty: blocking copy/selection harms accessibility
-}
-
 function updateVisitorCounter() {
     const counterEl = document.getElementById('visitorCount');
     if (!counterEl) return;
@@ -1222,3 +908,19 @@ window.selectModule = selectModule;
 window.calculateStats = calculateStats;
 window.getEarnedBadges = getEarnedBadges;
 window.showInputModal = showInputModal;
+// Export functions to window for inline HTML event handlers
+window.showModulesView = showModulesView;
+window.selectModule = selectModule;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.toggleCompleted = toggleCompleted;
+window.toggleTheme = toggleTheme;
+window.toggleFontSize = toggleFontSize;
+window.filterData = filterData;
+window.resetFilters = resetFilters;
+window.calculateStats = calculateStats;
+window.getEarnedBadges = getEarnedBadges;
+window.showInputModal = showInputModal;
+window.elements = elements;
+window.escapeHtml = escapeHtml;
+

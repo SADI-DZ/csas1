@@ -4,6 +4,8 @@
  * EN: Algorithm/var/start/end, Read/Write, if/then/else/end, while/do/end
  * FR: Algorithme/Variable/Debut/Fin, Lire/Ecrire, Si/Alors/Sinon/FinSi, TantQue/Faire/FinTantQue
  */
+
+
 document.addEventListener('DOMContentLoaded', () => {
   const editor = document.getElementById('algoEditor');
   const highlight = document.getElementById('algoHighlight');
@@ -64,10 +66,19 @@ Fin`
 
   const sanitizeExpr = (expr) => {
     const s = String(expr ?? '').trim();
-    // Allow: letters/numbers/underscore/space/quotes/operators/parens/dot/comma/accented chars
+    
+    // 1. Basic allowed characters check
     if (!/^[\w\s"'+\-*/%<>=!&|().,:àâéèêëïîôùûüçÀÂÉÈÊËÏÎÔÙÛÜÇ]+$/.test(s)) {
       throw new Error('تعبير غير مسموح.');
     }
+
+    // 2. Block JS exploitation keywords
+    const forbidden = ['window', 'document', 'fetch', 'XMLHttpRequest', 'eval', 'setTimeout', 'setInterval', 'Function', 'alert', 'console', 'cookie', 'localStorage', 'sessionStorage'];
+    const lower = s.toLowerCase();
+    if (forbidden.some(word => new RegExp(`\\b${word}\\b`).test(lower))) {
+        throw new Error('محاولة وصول غير مصرح بها.');
+    }
+
     return s;
   };
 
@@ -417,8 +428,8 @@ Fin`
         const m = s.match(/^(?:read|lire)\s*\(\s*([A-Za-z_]\w*)\s*\)\s*$/i);
         if (!m) throw new Error(`صيغة Read/Lire غير صحيحة (سطر ${lineIdx + 1})`);
         const name = m[1];
-        const rawVal = typeof window.showInputModal === 'function'
-          ? await window.showInputModal(`أدخل قيمة المتغير: ${name}`)
+        const rawVal = typeof showInputModal === 'function'
+          ? await showInputModal(`أدخل قيمة المتغير: ${name}`)
           : '';
         const v = rawVal == null ? '' : String(rawVal);
         const num = Number(v);

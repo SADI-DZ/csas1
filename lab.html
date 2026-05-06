@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;">
+        content="default-src 'self' http://localhost:3000 https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; frame-src 'self' http://localhost:3000;">
     <title>منصتي التعليمية | التعلم أسهل</title>
     <meta name="description"
         content="منصة تعليمية لطلاب المرحلة الثانوية تحتوي على دروس وتمارين مبسطة في المعلوماتية وتقنيات الويب والمكتبية.">
@@ -76,11 +76,11 @@
                         </div>
 
 
-                        <div class="module-card module-4" role="button" tabindex="0" data-lab-target="activity-win11" data-lab-title="محاكاة تثبيت Windows 11" aria-label="الانتقال إلى نشاط: محاكاة تثبيت Windows 11">
+                        <div class="module-card module-4" role="button" tabindex="0" data-lab-target="activity-simulator" data-lab-title="محاكاة تثبيت Windows 11" aria-label="فتح محاكاة تثبيت Windows 11">
                             <div class="module-icon"><i class="ph ph-windows-logo"></i></div>
                             <div class="module-content">
                                 <h3 class="module-title">محاكاة تثبيت Windows 11</h3>
-                                <p class="module-desc">خطوات التثبيت والإعدادات الأساسية بشكل مبسط.</p>
+                                <p class="module-desc">تجربة تثبيت نظام التشغيل خطوة بخطوة.</p>
                             </div>
                         </div>
                     </div>
@@ -191,6 +191,7 @@
                                 </div>
                                 <div class="code-editor-wrap">
                                     <pre id="htmlHighlight" class="code-highlight" aria-hidden="true"></pre>
+                                    <div id="htmlAutocomplete" class="autocomplete-list" hidden></div>
                                     <textarea id="htmlEditor" class="code-editor" spellcheck="false" aria-label="محرر HTML"></textarea>
                                 </div>
                             </div>
@@ -308,8 +309,21 @@
                     <div class="future-lab-grid">
                         <article class="future-lab-card">
                             <h3><i class="ph ph-windows-logo"></i> محاكاة تثبيت Windows 11</h3>
-                            <p>هذا القسم قيد التطوير وسيتم إضافته قريباً.</p>
-                            <span class="badge badge-coming-soon">قريبا</span>
+                            <p>المحاكي موجود في مجلد <code>win11-sim</code> داخل المشروع. يمكنك فتحه مباشرةً من هنا أو تشغيله منفصلاً.</p>
+                            <div class="lab-card-actions" style="margin-top: 1rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
+                                <a href="win11-sim/" target="_blank" class="btn-primary">
+                                    <i class="ph ph-arrow-right"></i>
+                                    فتح المحاكي
+                                </a>
+                                <a href="win11-sim/" target="_blank" class="btn-secondary">
+                                    <i class="ph ph-folder-open"></i>
+                                    فتح المجلد
+                                </a>
+                            </div>
+                            <p style="margin-top:1rem; color: var(--text-muted); font-size:0.95rem;">
+                                إذا لم يعمل الرابط مباشرة، افتح مجلد <code>win11-sim</code> ثم شغّل:
+                                <code>npm install</code> و <code>npm run dev</code>.
+                            </p>
                         </article>
                     </div>
                 </div>
@@ -331,6 +345,31 @@
                             <p>هذا القسم قيد التطوير وسيتم إضافته قريباً.</p>
                             <span class="badge badge-coming-soon">قريبا</span>
                         </article>
+                    </div>
+                </div>
+
+                <!-- نشاط محاكي الويندوز -->
+                <div class="lab-activity" id="activity-simulator" hidden>
+                    <div class="lab-hero">
+                        <div class="lab-hero-content">
+                            <span class="lab-hero-badge"><i class="ph ph-windows-logo"></i> محاكاة</span>
+                            <h3 class="lab-hero-title">محاكي تثبيت Windows 11</h3>
+                            <p class="lab-hero-subtitle">تعلم كيفية تثبيت نظام التشغيل في بيئة آمنة وتفاعلية.</p>
+                        </div>
+                    </div>
+
+                    <div class="browser-window simulator-window">
+                        <div class="window-header browser-header">
+                            <div class="window-controls">
+                                <span class="control close"></span>
+                                <span class="control minimize"></span>
+                                <span class="control maximize"></span>
+                            </div>
+                            <div class="browser-url-bar">
+                                <i class="ph ph-shield-check"></i> https://sim.local/windows11-setup
+                            </div>
+                        </div>
+                        <iframe src="http://localhost:3000" class="preview-frame simulator-frame" style="height: 700px; border: none; width: 100%;" title="Windows 11 Simulator"></iframe>
                     </div>
                 </div>
 
@@ -358,8 +397,8 @@
                         </article>
                         <article class="future-lab-card">
                             <h3><i class="ph ph-windows-logo"></i> محاكاة تثبيت Windows 11</h3>
-                            <p>سيتم إضافته لاحقا لشرح خطوات تثبيت ويندوز 11 وإعداداته الأساسية بطريقة تفاعلية.</p>
-                            <span class="badge badge-coming-soon">قريبا</span>
+                            <p>أصبح متاحاً الآن داخل المخبر لشرح خطوات تثبيت ويندوز 11 وإعداداته الأساسية بطريقة تفاعلية.</p>
+                            <span class="badge badge-lesson">متاح الآن</span>
                         </article>
                         <article class="future-lab-card">
                             <h3><i class="ph ph-network"></i> إنشاء شبكات بسيطة</h3>
@@ -403,6 +442,7 @@
 
     <script src="data/data.js" defer></script>
     <script src="js/main.js" defer></script>
+    <script src="js/html-editor.js" defer></script>
     <script src="js/algo-lab.js" defer></script>
     <script defer>
         document.addEventListener('DOMContentLoaded', () => {
@@ -458,6 +498,7 @@
             window.showModulesView = showModules;
 
             showModules();
+            initHtmlLab(); // Initialize HTML editor
         });
     </script>
 </body>
