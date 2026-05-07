@@ -32,22 +32,102 @@ Debut
 Fin`
   };
 
+  const EXAMPLES = {
+    en: {
+      hello: `Algorithm HelloWorld
+start
+  Write("Hello World!");
+end`,
+      sum: `Algorithm Summation
+var a, b, s : integer
+start
+  a ← 10
+  b ← 20
+  s ← a + b
+  Write("The sum is:");
+  Write(s);
+end`,
+      condition: `Algorithm Grades
+var score : integer
+start
+  score ← 85
+  if score >= 90 then
+    Write("Excellent");
+  else if score >= 80 then
+    Write("Very Good");
+  else if score >= 70 then
+    Write("Good");
+  else
+    Write("Needs improvement");
+  end
+end`,
+      loop: `Algorithm Counting
+var i : integer
+start
+  for i = 1 to 5 do
+    Write("Number:");
+    Write(i);
+  end
+end`
+    },
+    fr: {
+      hello: `Algorithme HelloWorld
+Debut
+  Ecrire("Bonjour tout le monde!");
+Fin`,
+      sum: `Algorithme Somme
+var a, b, s : entier
+Debut
+  a ← 10
+  b ← 20
+  s ← a + b
+  Ecrire("La somme est:");
+  Ecrire(s);
+Fin`,
+      condition: `Algorithme Notes
+var score : entier
+Debut
+  score ← 85
+  Si score >= 90 Alors
+    Ecrire("Excellent");
+  Sinon si score >= 80 Alors
+    Ecrire("Très bien");
+  Sinon si score >= 70 Alors
+    Ecrire("Bien");
+  Sinon
+    Ecrire("Amélioration nécessaire");
+  FinSi
+Fin`,
+      loop: `Algorithme Comptage
+var i : entier
+Debut
+  Pour i = 1 a 5 Faire
+    Ecrire("Nombre:");
+    Ecrire(i);
+  FinPour
+Fin`
+    }
+  };
+
   const KW_ALGORITHM = ['algorithm', 'algorithme'];
   const KW_VAR = ['var', 'variable', 'variables'];
   const KW_START = ['start', 'debut', 'début'];
   const KW_END = ['end', 'fin', 'finsi', 'fintantque'];
   const KW_IF_START = ['if', 'si'];
+  const KW_ELSE_IF = ['else if', 'sinon si'];
   const KW_THEN = ['then', 'alors'];
   const KW_ELSE = ['else', 'sinon'];
   const KW_WHILE_START = ['while', 'tantque'];
+  const KW_FOR_START = ['for', 'pour'];
+  const KW_TO = ['to', 'a', 'à'];
   const KW_DO = ['do', 'faire'];
   const KW_READ = ['read', 'lire'];
   const KW_WRITE = ['write', 'ecrire', 'écrire'];
 
   // For syntax highlighting
   const HL_KEYWORDS = [...KW_ALGORITHM, ...KW_VAR, ...KW_START, ...KW_END];
-  const HL_CONTROL = [...KW_IF_START, ...KW_THEN, ...KW_ELSE, ...KW_WHILE_START, ...KW_DO,
-    'finsi', 'fintantque'];
+  const HL_CONTROL = [...KW_IF_START, ...KW_THEN, ...KW_ELSE, ...KW_WHILE_START, ...KW_FOR_START, ...KW_TO, ...KW_DO,
+    'finsi', 'fintantque', 'finpour', 'else if', 'sinon si'];
   const HL_IO = [...KW_READ, ...KW_WRITE, 'print', 'let'];
   const HL_TYPES = ['integer', 'real', 'string', 'boolean', 'char',
     'entier', 'reel', 'réel', 'chaine', 'chaîne', 'booleen', 'booléen', 'caractere', 'caractère'];
@@ -68,7 +148,7 @@ Fin`
     const s = String(expr ?? '').trim();
     
     // 1. Basic allowed characters check - only allow simple expressions
-    if (!/^[\w\s"'+\-*/%<>=!&|().]+$/.test(s)) {
+    if (!/^[\w\s"'+\-*/%<>=!&|().,:]+$/.test(s)) {
       throw new Error('تعبير غير مسموح.');
     }
 
@@ -95,15 +175,12 @@ Fin`
       .replace(/\b(?:vrai|true)\b/gi, 'true')
       .replace(/\b(?:faux|false)\b/gi, 'false');
 
-    // استخدام eval مع سياق المتغيرات فقط للأمان
     try {
-      const context = Object.create(null);
-      for (const key in vars) {
-        context[key] = vars[key];
-      }
-      // eslint-disable-next-line no-eval
-      const result = eval(`"use strict"; with (context) { return (${safe}); }`);
-      return result;
+      const keys = Object.keys(vars);
+      const values = keys.map(k => vars[k]);
+      // eslint-disable-next-line no-new-func
+      const fn = new Function(...keys, `return (${safe});`);
+      return fn(...values);
     } catch (e) {
       throw new Error('خطأ في تقييم التعبير: ' + e.message);
     }
@@ -164,6 +241,17 @@ Fin`
         return;
       }
 
+      // else if ... then | sinon si ... alors
+      const elseifPrefix = startsWithAny(low, KW_ELSE_IF);
+      if (elseifPrefix && thenSuffix) {
+        const top = stack[stack.length - 1];
+        if (!top || top.type !== 'if') throw new Error(`else if/sinon si بدون if/si (سطر ${i + 1})`);
+        const cond = line.slice(elseifPrefix.length + 1, -(thenSuffix.length + 1)).trim();
+        if (!top.elseIfs) top.elseIfs = [];
+        top.elseIfs.push({ line: i, cond });
+        return;
+      }
+
       // else | sinon
       if (KW_ELSE.includes(low)) {
         const top = stack[stack.length - 1];
@@ -181,8 +269,32 @@ Fin`
         return;
       }
 
-      // end | fin | finsi | fintantque
-      if (KW_END.includes(low)) {
+      // for ... to ... do | pour ... a ... faire
+      const forPrefix = startsWithAny(low, KW_FOR_START);
+      if (forPrefix && doSuffix) {
+        const middle = line.slice(forPrefix.length + 1, -(doSuffix.length + 1)).trim();
+        // search for 'to' or 'a' in middle
+        let toIdx = -1;
+        let toLen = 0;
+        for (const kwTo of KW_TO) {
+            const idx = middle.toLowerCase().indexOf(' ' + kwTo + ' ');
+            if (idx >= 0) { toIdx = idx; toLen = kwTo.length; break; }
+        }
+        if (toIdx < 0) throw new Error(`صيغة for غير صحيحة: مفقود to/a (سطر ${i + 1})`);
+        
+        const left = middle.slice(0, toIdx).trim();
+        const endExpr = middle.slice(toIdx + toLen + 2).trim();
+        
+        const m = left.match(/^([A-Za-z_]\w*)\s*=\s*(.+)$/);
+        if (!m) throw new Error(`صيغة for غير صحيحة: المتغير والبداية (سطر ${i + 1})`);
+        
+        const [, name, startExpr] = m;
+        pushBlock({ type: 'for', line: i, varName: name, startExpr, endExpr, endLine: null });
+        return;
+      }
+
+      // end | fin | finsi | fintantque | finpour
+      if (KW_END.includes(low) || low === 'finpour' || low === 'finsi' || low === 'fintantque') {
         const top = stack.pop();
         if (top) top.endLine = i;
         return;
@@ -196,12 +308,14 @@ Fin`
 
     const mapIfByLine = new Map();
     const mapWhileByLine = new Map();
+    const mapForByLine = new Map();
     blocks.forEach(b => {
       if (b.type === 'if') mapIfByLine.set(b.line, b);
       if (b.type === 'while') mapWhileByLine.set(b.line, b);
+      if (b.type === 'for') mapForByLine.set(b.line, b);
     });
 
-    return { blocks, mapIfByLine, mapWhileByLine };
+    return { blocks, mapIfByLine, mapWhileByLine, mapForByLine };
   };
 
   const getLineKind = (line) => {
@@ -237,6 +351,10 @@ Fin`
     const thenS = endsWithAny(low, KW_THEN);
     if (ifP && thenS) return { kind: 'if', text: s };
 
+    // else if ... then | sinon si ... alors
+    const elseifP = startsWithAny(low, KW_ELSE_IF);
+    if (elseifP && thenS) return { kind: 'elseif', text: s };
+
     // else | sinon
     if (KW_ELSE.includes(low)) return { kind: 'else', text: s };
 
@@ -245,8 +363,12 @@ Fin`
     const doS = endsWithAny(low, KW_DO);
     if (whP && doS) return { kind: 'while', text: s };
 
-    // end | fin | finsi | fintantque
-    if (KW_END.includes(low)) return { kind: 'end', text: s };
+    // for ... to ... do | pour ... a ... faire
+    const forP = startsWithAny(low, KW_FOR_START);
+    if (forP && doS) return { kind: 'for', text: s };
+
+    // end | fin | finsi | fintantque | finpour
+    if (KW_END.includes(low) || low === 'finpour' || low === 'finsi' || low === 'fintantque') return { kind: 'end', text: s };
 
     // Assignment with ←
     if (s.includes('←')) return { kind: 'assign', text: s };
@@ -255,7 +377,7 @@ Fin`
   };
 
   const renderVars = () => {
-    const entries = Object.entries(vm.vars);
+    const entries = Object.entries(vm.vars).filter(([k]) => !k.startsWith('__'));
     if (!entries.length) {
       varsBody.innerHTML = `<tr><td colspan="2" class="algo-empty">لا توجد متغيرات بعد</td></tr>`;
       return;
@@ -362,10 +484,11 @@ Fin`
 
   const resetVM = () => {
     vm.lines = editor.value.replace(/\r\n/g, '\n').split('\n');
-    const { blocks, mapIfByLine, mapWhileByLine } = rebuildBlocks(vm.lines);
+    const { blocks, mapIfByLine, mapWhileByLine, mapForByLine } = rebuildBlocks(vm.lines);
     vm.blocks = blocks;
     vm._ifMap = mapIfByLine;
     vm._whileMap = mapWhileByLine;
+    vm._forMap = mapForByLine;
     vm.pc = 0;
     vm.vars = {};
     vm.out = [];
@@ -401,6 +524,7 @@ Fin`
     const { kind } = getLineKind(raw);
 
     try {
+      vm._lastPC = vm.pc;
       if (kind === 'algorithm' || kind === 'start') {
         vm.pc += 1;
 
@@ -470,8 +594,26 @@ Fin`
         if (ok) {
           vm.pc += 1;
         } else {
-          vm.pc = (b.elseLine != null ? b.elseLine + 1 : b.endLine + 1);
+          // Check elseIfs
+          let handled = false;
+          if (b.elseIfs) {
+            for (const ei of b.elseIfs) {
+              if (Boolean(evalExpr(ei.cond, vm.vars))) {
+                vm.pc = ei.line + 1;
+                handled = true;
+                break;
+              }
+            }
+          }
+          if (!handled) {
+            vm.pc = (b.elseLine != null ? b.elseLine + 1 : b.endLine + 1);
+          }
         }
+
+      } else if (kind === 'elseif') {
+        const match = vm.blocks.find(b => b.type === 'if' && b.elseIfs && b.elseIfs.some(ei => ei.line === lineIdx));
+        if (!match) throw new Error(`else if/sinon si بدون if/si (سطر ${lineIdx + 1})`);
+        vm.pc = match.endLine + 1;
 
       } else if (kind === 'else') {
         const match = vm.blocks.find(b => b.type === 'if' && b.elseLine === lineIdx);
@@ -488,10 +630,39 @@ Fin`
           vm.pc = b.endLine + 1;
         }
 
+      } else if (kind === 'for') {
+        const b = vm._forMap.get(lineIdx);
+        if (!b) throw new Error(`for/pour غير معروف (سطر ${lineIdx + 1})`);
+        
+        const loopKey = `__for_${lineIdx}`;
+        
+        if (!vm.vars[loopKey]) {
+            // initialize
+            vm.vars[b.varName] = evalExpr(b.startExpr, vm.vars);
+            vm.vars[loopKey] = true;
+        } else {
+            // increment
+            vm.vars[b.varName] = (Number(vm.vars[b.varName]) || 0) + 1;
+        }
+        
+        const currentVal = Number(vm.vars[b.varName]);
+        const endVal = Number(evalExpr(b.endExpr, vm.vars));
+        
+        if (currentVal <= endVal) {
+          vm.pc += 1;
+        } else {
+          delete vm.vars[loopKey];
+          vm.pc = b.endLine + 1;
+        }
+
       } else if (kind === 'end') {
         const whileBlock = vm.blocks.find(b => b.type === 'while' && b.endLine === lineIdx);
+        const forBlock = vm.blocks.find(b => b.type === 'for' && b.endLine === lineIdx);
+        
         if (whileBlock) {
           vm.pc = whileBlock.line;
+        } else if (forBlock) {
+          vm.pc = forBlock.line;
         } else {
           vm.pc += 1;
         }
@@ -542,10 +713,11 @@ Fin`
   editor.addEventListener('input', () => {
     vm.lines = editor.value.replace(/\r\n/g, '\n').split('\n');
     try {
-      const { blocks, mapIfByLine, mapWhileByLine } = rebuildBlocks(vm.lines);
+      const { blocks, mapIfByLine, mapWhileByLine, mapForByLine } = rebuildBlocks(vm.lines);
       vm.blocks = blocks;
       vm._ifMap = mapIfByLine;
       vm._whileMap = mapWhileByLine;
+      vm._forMap = mapForByLine;
     } catch {
       // ignore parse errors during typing
     }
@@ -594,6 +766,17 @@ Fin`
       });
     });
   }
+
+  const exampleBtns = document.querySelectorAll('.example-item');
+  exampleBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const type = btn.dataset.example;
+      if (EXAMPLES[currentLang] && EXAMPLES[currentLang][type]) {
+        editor.value = EXAMPLES[currentLang][type];
+        resetVM();
+      }
+    });
+  });
 
   if (!editor.value.trim()) editor.value = DEFAULT_PROGRAMS[currentLang];
   resetVM();

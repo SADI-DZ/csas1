@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; frame-src 'self';">
+        content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; frame-src 'self';">
     <title>منصتي التعليمية | التعلم أسهل</title>
     <meta name="description"
         content="منصة تعليمية لطلاب المرحلة الثانوية تحتوي على دروس وتمارين مبسطة في المعلوماتية وتقنيات الويب والمكتبية.">
@@ -16,7 +16,6 @@
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web" defer></script>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/win11-simulator.css">
 </head>
 
 <body>
@@ -240,6 +239,41 @@
                     </div>
 
                     <div class="lab-grid algo-grid">
+                        <aside class="algo-sidebar">
+                            <div class="sidebar-header">
+                                <h3><i class="ph ph-lightbulb"></i> أمثلة جاهزة</h3>
+                            </div>
+                            <div class="algo-examples-list">
+                                <button class="example-item" data-example="hello">
+                                    <span class="example-icon"><i class="ph ph-chat-centered-text"></i></span>
+                                    <div class="example-info">
+                                        <span class="example-name">مرحباً بالعالم</span>
+                                        <span class="example-desc">أبسط خوارزمية للطباعة</span>
+                                    </div>
+                                </button>
+                                <button class="example-item" data-example="sum">
+                                    <span class="example-icon"><i class="ph ph-plus-circle"></i></span>
+                                    <div class="example-info">
+                                        <span class="example-name">جمع عددين</span>
+                                        <span class="example-desc">استخدام المتغيرات والجمع</span>
+                                    </div>
+                                </button>
+                                <button class="example-item" data-example="condition">
+                                    <span class="example-icon"><i class="ph ph-git-fork"></i></span>
+                                    <div class="example-info">
+                                        <span class="example-name">الشروط (Else If)</span>
+                                        <span class="example-desc">التحقق من الدرجة</span>
+                                    </div>
+                                </button>
+                                <button class="example-item" data-example="loop">
+                                    <span class="example-icon"><i class="ph ph-arrows-clockwise"></i></span>
+                                    <div class="example-info">
+                                        <span class="example-name">حلقة تكرارية (For)</span>
+                                        <span class="example-desc">طباعة الأعداد من 1 إلى 5</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </aside>
                         <article class="lab-card">
                             <div class="lab-card-header">
                                 <h3><i class="ph ph-pencil-line"></i> محرر الخوارزمية</h3>
@@ -348,8 +382,8 @@
                                 <i class="ph ph-shield-check"></i> https://sim.local/windows11-setup
                             </div>
                         </div>
-                        <div id="win11SimulatorContainer" class="win11-simulator-container">
-                            <!-- Simulator will be injected here by JS -->
+                        <div id="win11SimulatorContainer" class="win11-simulator-container" style="height: 600px; padding: 0; overflow: hidden;">
+                            <iframe src="win11-simulator.html" style="width: 100%; height: 100%; border: none;" id="simulatorFrame"></iframe>
                         </div>
                     </div>
                 </div>
@@ -425,7 +459,6 @@
     <script src="js/main.js" defer></script>
     <script src="js/html-editor.js" defer></script>
     <script src="js/algo-lab.js" defer></script>
-    <script src="js/win11-simulator.js" defer></script>
     <script defer>
         document.addEventListener('DOMContentLoaded', () => {
             const modulesSection = document.getElementById('labModulesSection');
@@ -467,7 +500,9 @@
                 const id = card.getAttribute('data-lab-target');
                 const text = card.getAttribute('data-lab-title') || card.textContent.trim();
                 if (id === 'activity-simulator') {
-                    initSimulator();
+                    // Iframe loads automatically, but we can refresh it if needed
+                    const frame = document.getElementById('simulatorFrame');
+                    if (frame) frame.src = frame.src;
                 }
                 showActivity(id, text);
             };
