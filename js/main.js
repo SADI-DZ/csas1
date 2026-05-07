@@ -29,7 +29,7 @@ const elements = {
     cssHighlight: document.getElementById('cssHighlight'),
     jsEditor: document.getElementById('jsEditor'),
     jsHighlight: document.getElementById('jsHighlight'),
-    htmlPreviewFrame: document.getElementById('htmlPreviewFrame'),
+    htmlPreviewFrame: document.getElementById('htmlPreview') || document.getElementById('htmlPreviewFrame'),
     htmlAutocomplete: document.getElementById('htmlAutocomplete'),
     // Support multiple page variants (lab.html uses different ids)
     runPreviewBtn: document.getElementById('runPreviewBtn') || document.getElementById('runHtmlPreviewBtn'),

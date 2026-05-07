@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self' http://localhost:3000 https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; frame-src 'self' http://localhost:3000;">
+        content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; frame-src 'self';">
     <title>منصتي التعليمية | التعلم أسهل</title>
     <meta name="description"
         content="منصة تعليمية لطلاب المرحلة الثانوية تحتوي على دروس وتمارين مبسطة في المعلوماتية وتقنيات الويب والمكتبية.">
@@ -16,6 +16,7 @@
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web" defer></script>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/win11-simulator.css">
 </head>
 
 <body>
@@ -305,28 +306,6 @@
                 </div>
 
 
-                <div class="lab-activity" id="activity-win11" hidden>
-                    <div class="future-lab-grid">
-                        <article class="future-lab-card">
-                            <h3><i class="ph ph-windows-logo"></i> محاكاة تثبيت Windows 11</h3>
-                            <p>المحاكي موجود في مجلد <code>win11-sim</code> داخل المشروع. يمكنك فتحه مباشرةً من هنا أو تشغيله منفصلاً.</p>
-                            <div class="lab-card-actions" style="margin-top: 1rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
-                                <a href="win11-sim/" target="_blank" class="btn-primary">
-                                    <i class="ph ph-arrow-right"></i>
-                                    فتح المحاكي
-                                </a>
-                                <a href="win11-sim/" target="_blank" class="btn-secondary">
-                                    <i class="ph ph-folder-open"></i>
-                                    فتح المجلد
-                                </a>
-                            </div>
-                            <p style="margin-top:1rem; color: var(--text-muted); font-size:0.95rem;">
-                                إذا لم يعمل الرابط مباشرة، افتح مجلد <code>win11-sim</code> ثم شغّل:
-                                <code>npm install</code> و <code>npm run dev</code>.
-                            </p>
-                        </article>
-                    </div>
-                </div>
 
                 <div class="lab-activity" id="activity-networks" hidden>
                     <div class="future-lab-grid">
@@ -369,7 +348,9 @@
                                 <i class="ph ph-shield-check"></i> https://sim.local/windows11-setup
                             </div>
                         </div>
-                        <iframe src="http://localhost:3000" class="preview-frame simulator-frame" style="height: 700px; border: none; width: 100%;" title="Windows 11 Simulator"></iframe>
+                        <div id="win11SimulatorContainer" class="win11-simulator-container">
+                            <!-- Simulator will be injected here by JS -->
+                        </div>
                     </div>
                 </div>
 
@@ -444,6 +425,7 @@
     <script src="js/main.js" defer></script>
     <script src="js/html-editor.js" defer></script>
     <script src="js/algo-lab.js" defer></script>
+    <script src="js/win11-simulator.js" defer></script>
     <script defer>
         document.addEventListener('DOMContentLoaded', () => {
             const modulesSection = document.getElementById('labModulesSection');
@@ -481,6 +463,9 @@
             const activateCard = (card) => {
                 const id = card.getAttribute('data-lab-target');
                 const text = card.getAttribute('data-lab-title') || card.textContent.trim();
+                if (id === 'activity-simulator') {
+                    initSimulator();
+                }
                 showActivity(id, text);
             };
 
