@@ -393,7 +393,7 @@ ul {
     font-size: 1rem;
     border-radius: var(--radius-full);
     background: transparent;
-    color: var(--text-main);
+    color: #0f172a;
     font-family: inherit;
 }
 
@@ -862,10 +862,6 @@ ul {
 }
 
 .card.completed .card-icon {
-    background: var(--success-color);
-    color: white;
-}
-
     background: var(--success-color);
     color: white;
 }
@@ -3227,19 +3223,6 @@ html.font-large {
     background: var(--surface-color);
 }
 
-/* Responsive */
-
-    .badge-notification {
-        flex-direction: column;
-        text-align: center;
-        padding: 1rem;
-    }
-
-    .badge-notification-content {
-        align-items: center;
-    }
-}
-
 /* Autocomplete Suggestions Styles */
 #htmlAutocomplete {
     position: absolute;
@@ -3527,6 +3510,7 @@ html.font-large {
     font-weight: 800;
     margin-bottom: 1rem;
     background: linear-gradient(to left, var(--primary-color), var(--accent-color));
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     position: relative;

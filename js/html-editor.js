@@ -15,9 +15,18 @@ const defaultHtmlTemplate = `<!DOCTYPE html>
 </html>`;
 
 function initHtmlLab() {
-    if (!elements.htmlEditor || !elements.htmlPreviewFrame) return;
+    const editorElements = {
+        htmlEditor: document.getElementById('htmlEditor'),
+        htmlHighlight: document.getElementById('htmlHighlight'),
+        htmlPreviewFrame: document.getElementById('htmlPreview') || document.getElementById('htmlPreviewFrame'),
+        htmlAutocomplete: document.getElementById('htmlAutocomplete'),
+        runPreviewBtn: document.getElementById('runPreviewBtn') || document.getElementById('runHtmlPreviewBtn'),
+        resetActiveEditorBtn: document.getElementById('resetActiveEditorBtn') || document.getElementById('resetHtmlEditorBtn')
+    };
 
-    const autocompleteBox = elements.htmlAutocomplete;
+    if (!editorElements.htmlEditor || !editorElements.htmlPreviewFrame) return;
+
+    const autocompleteBox = editorElements.htmlAutocomplete;
     const htmlTags = [
         'html', 'head', 'body', 'title', 'meta', 'link', 'style', 'script', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'p', 'a', 'ul', 'ol', 'li', 'img', 'table', 'tr', 'td', 'th', 'header', 'footer', 'nav', 'section', 'article', 'aside', 'main', 'form', 'input', 'button', 'label', 'textarea', 'select', 'option', 'br', 'hr'
     ];
@@ -30,11 +39,11 @@ function initHtmlLab() {
     let activeSuggestionIndex = 0;
 
     const composeSrcDoc = () => {
-        return elements.htmlEditor.value || defaultHtmlTemplate;
+        return editorElements.htmlEditor.value || defaultHtmlTemplate;
     };
 
     const flashPreview = () => {
-        const frame = elements.htmlPreviewFrame;
+        const frame = editorElements.htmlPreviewFrame;
         if (!frame) return;
         frame.classList.remove('is-updated');
         void frame.offsetWidth;
@@ -42,19 +51,19 @@ function initHtmlLab() {
     };
 
     const renderPreview = (opts = { flash: false }) => {
-        elements.htmlPreviewFrame.srcdoc = composeSrcDoc();
+        editorElements.htmlPreviewFrame.srcdoc = composeSrcDoc();
         if (opts.flash) flashPreview();
     };
 
     const renderHighlight = () => {
-        if (!elements.htmlEditor || !elements.htmlHighlight) return;
-        elements.htmlHighlight.innerHTML = `${highlightHtmlCode(elements.htmlEditor.value)}\n`;
+        if (!editorElements.htmlEditor || !editorElements.htmlHighlight) return;
+        editorElements.htmlHighlight.innerHTML = `${highlightHtmlCode(editorElements.htmlEditor.value)}\n`;
     };
 
     const syncScroll = () => {
-        if (!elements.htmlEditor || !elements.htmlHighlight) return;
-        elements.htmlHighlight.scrollTop = elements.htmlEditor.scrollTop;
-        elements.htmlHighlight.scrollLeft = elements.htmlEditor.scrollLeft;
+        if (!editorElements.htmlEditor || !editorElements.htmlHighlight) return;
+        editorElements.htmlHighlight.scrollTop = editorElements.htmlEditor.scrollTop;
+        editorElements.htmlHighlight.scrollLeft = editorElements.htmlEditor.scrollLeft;
     };
 
     const hideAutocomplete = () => {
@@ -66,7 +75,7 @@ function initHtmlLab() {
     };
 
     const getAutocompleteContext = () => {
-        const textarea = elements.htmlEditor;
+        const textarea = editorElements.htmlEditor;
         const pos = textarea.selectionStart;
         const value = textarea.value.slice(0, pos);
         const lastOpen = value.lastIndexOf('<');
@@ -133,7 +142,7 @@ function initHtmlLab() {
 
     const applySuggestion = (suggestion) => {
         if (!suggestion || !currentContext) return;
-        const textarea = elements.htmlEditor;
+        const textarea = editorElements.htmlEditor;
         const pos = textarea.selectionStart;
         const value = textarea.value;
 
@@ -181,12 +190,12 @@ function initHtmlLab() {
         renderAutocomplete(suggestions);
     };
 
-    if (elements.htmlEditor && !elements.htmlEditor.value.trim()) {
-        elements.htmlEditor.value = defaultHtmlTemplate;
+    if (editorElements.htmlEditor && !editorElements.htmlEditor.value.trim()) {
+        editorElements.htmlEditor.value = defaultHtmlTemplate;
     }
 
-    elements.runPreviewBtn?.addEventListener('click', () => {
-        const btn = elements.runPreviewBtn;
+    editorElements.runPreviewBtn?.addEventListener('click', () => {
+        const btn = editorElements.runPreviewBtn;
         const icon = btn?.querySelector('i');
         const previousIconClass = icon?.className;
 
@@ -201,9 +210,9 @@ function initHtmlLab() {
         }, 450);
     });
 
-    elements.resetActiveEditorBtn?.addEventListener('click', () => {
-        if (!elements.htmlEditor) return;
-        elements.htmlEditor.value = defaultHtmlTemplate;
+    editorElements.resetActiveEditorBtn?.addEventListener('click', () => {
+        if (!editorElements.htmlEditor) return;
+        editorElements.htmlEditor.value = defaultHtmlTemplate;
         renderAll({ flash: true });
     });
 
@@ -218,15 +227,15 @@ function initHtmlLab() {
         });
     }
 
-    elements.htmlEditor.addEventListener('input', () => {
+    editorElements.htmlEditor.addEventListener('input', () => {
         renderAll();
     });
 
-    elements.htmlEditor.addEventListener('scroll', syncScroll);
-    elements.htmlEditor.addEventListener('blur', () => {
+    editorElements.htmlEditor.addEventListener('scroll', syncScroll);
+    editorElements.htmlEditor.addEventListener('blur', () => {
         window.setTimeout(hideAutocomplete, 120);
     });
-    elements.htmlEditor.addEventListener('keydown', (e) => {
+    editorElements.htmlEditor.addEventListener('keydown', (e) => {
         if (autocompleteBox && !autocompleteBox.hidden) {
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
@@ -288,9 +297,9 @@ function highlightHtmlCode(code) {
 }
 
 function handleHtmlEditorKeydown(e) {
-    if (!elements.htmlEditor) return;
+    const textarea = document.getElementById('htmlEditor');
+    if (!textarea) return;
 
-    const textarea = elements.htmlEditor;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
 

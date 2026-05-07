@@ -126,11 +126,31 @@ function initData() {
 }
 
 function normalizeData(data) {
-    return data.map(item => ({
-        ...item,
-        difficulty: item.difficulty || inferDifficulty(item),
-        isReady: item.isReady === true
-    }));
+    return data.map(item => {
+        const normalized = {
+            ...item,
+            difficulty: item.difficulty || inferDifficulty(item),
+            isReady: item.isReady === true
+        };
+        normalized.searchText = generateSearchText(normalized);
+        return normalized;
+    });
+}
+
+function generateSearchText(item) {
+    const textParts = [
+        item.title,
+        item.description,
+        item.module,
+        item.level,
+        item.type,
+        ...(Array.isArray(item.tags) ? item.tags : [])
+    ];
+
+    return textParts
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
 }
 
 function inferDifficulty(item) {
@@ -238,8 +258,7 @@ function renderModules() {
         fragment.appendChild(card);
     });
 
-    elements.modulesGrid.innerHTML = '';
-    elements.modulesGrid.appendChild(fragment);
+    elements.modulesGrid.replaceChildren(fragment);
 
     // Reveal animation for newly rendered module cards
     if (typeof observeCards === 'function') {
@@ -391,23 +410,34 @@ function getActiveFilter(name) {
 }
 
 function filterData() {
-    if (!state.currentModule) return;
-
     const searchTerm = elements.searchInput?.value.toLowerCase().trim() || '';
     const activeType = getActiveFilter('type');
-    const moduleItems = state.allData.filter(item => item.module === state.currentModule);
+    const shouldShowSearchResults = state.currentModule !== null || searchTerm !== '' || activeType !== 'all';
 
-    const filtered = moduleItems.filter(item => {
-        const description = typeof item.description === 'string' ? item.description : '';
-        const tags = Array.isArray(item.tags) ? item.tags : [];
-        const matchSearch = searchTerm === '' ||
-            item.title.toLowerCase().includes(searchTerm) ||
-            description.toLowerCase().includes(searchTerm) ||
-            tags.some(tag => String(tag).toLowerCase().includes(searchTerm));
+    if (!shouldShowSearchResults) {
+        showModulesView();
+        return;
+    }
 
-        const matchType = activeType === 'all' || item.type === activeType;
-        return matchSearch && matchType;
+    const itemsToSearch = state.currentModule
+        ? state.allData.filter(item => item.module === state.currentModule)
+        : state.allData;
+
+    const filtered = itemsToSearch.filter(item => {
+        const matchesSearch = searchTerm === '' || item.searchText.includes(searchTerm);
+        const matchesType = activeType === 'all' || item.type === activeType;
+        return matchesSearch && matchesType;
     });
+
+    if (state.currentModule === null) {
+        state.view = 'content';
+        if (elements.modulesSection) elements.modulesSection.style.display = 'none';
+        if (elements.mainContent) elements.mainContent.style.display = 'grid';
+        if (elements.navBackBtn) elements.navBackBtn.style.display = 'inline-flex';
+        if (elements.moduleTitle) {
+            elements.moduleTitle.innerHTML = `<i class="ph ph-magnifying-glass"></i><span>نتائج البحث</span>`;
+        }
+    }
 
     renderContent(filtered);
     window.dispatchEvent(new CustomEvent('filterRendered'));
@@ -453,7 +483,7 @@ function renderContent(data) {
 
     if (data.length === 0) {
         if (elements.emptyState) elements.emptyState.style.display = 'block';
-        grid.innerHTML = '';
+        grid.replaceChildren();
         return;
     }
 
