@@ -67,16 +67,21 @@ Fin`
   const sanitizeExpr = (expr) => {
     const s = String(expr ?? '').trim();
     
-    // 1. Basic allowed characters check
-    if (!/^[\w\s"'+\-*/%<>=!&|().,:àâéèêëïîôùûüçÀÂÉÈÊËÏÎÔÙÛÜÇ]+$/.test(s)) {
+    // 1. Basic allowed characters check - only allow simple expressions
+    if (!/^[\w\s"'+\-*/%<>=!&|().]+$/.test(s)) {
       throw new Error('تعبير غير مسموح.');
     }
 
     // 2. Block JS exploitation keywords
-    const forbidden = ['window', 'document', 'fetch', 'XMLHttpRequest', 'eval', 'setTimeout', 'setInterval', 'Function', 'alert', 'console', 'cookie', 'localStorage', 'sessionStorage'];
+    const forbidden = ['window', 'document', 'fetch', 'XMLHttpRequest', 'eval', 'setTimeout', 'setInterval', 'Function', 'alert', 'console', 'cookie', 'localStorage', 'sessionStorage', 'process', 'require', 'import', 'export', 'class', 'function', 'new', 'delete', 'typeof', 'instanceof', 'in', 'this'];
     const lower = s.toLowerCase();
     if (forbidden.some(word => new RegExp(`\\b${word}\\b`).test(lower))) {
         throw new Error('محاولة وصول غير مصرح بها.');
+    }
+
+    // 3. Prevent function calls and complex constructs
+    if (/\w+\s*\(/.test(s)) {
+      throw new Error('استدعاء دوال غير مسموح.');
     }
 
     return s;
@@ -89,11 +94,19 @@ Fin`
       .replace(/\b(?:not|non)\b/gi, '!')
       .replace(/\b(?:vrai|true)\b/gi, 'true')
       .replace(/\b(?:faux|false)\b/gi, 'false');
-    const keys = Object.keys(vars);
-    const values = Object.values(vars);
-    // eslint-disable-next-line no-new-func
-    const fn = new Function(...keys, `return (${safe});`);
-    return fn(...values);
+
+    // استخدام eval مع سياق المتغيرات فقط للأمان
+    try {
+      const context = Object.create(null);
+      for (const key in vars) {
+        context[key] = vars[key];
+      }
+      // eslint-disable-next-line no-eval
+      const result = eval(`"use strict"; with (context) { return (${safe}); }`);
+      return result;
+    } catch (e) {
+      throw new Error('خطأ في تقييم التعبير: ' + e.message);
+    }
   };
 
   const stripComments = (line) => {
