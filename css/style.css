@@ -469,94 +469,6 @@ ul {
     top: 90px;
 }
 
-/* Progress Tracker */
-.progress-tracker {
-    margin-bottom: 2rem;
-    padding-bottom: 1.75rem;
-    border-bottom: 2px solid var(--border-color);
-}
-
-.progress-header {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-}
-
-.progress-header h3 {
-    font-size: 1.15rem;
-    color: var(--primary-dark);
-}
-
-.progress-icon {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.2rem;
-}
-
-.progress-stats {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.75rem;
-    font-size: 0.95rem;
-    color: var(--text-muted);
-}
-
-.progress-stats strong {
-    color: var(--primary-color);
-    font-size: 1.1rem;
-}
-
-.progress-bar-container {
-    height: 10px;
-    background: var(--border-color);
-    border-radius: var(--radius-full);
-    overflow: hidden;
-    margin-bottom: 0.5rem;
-}
-
-.progress-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-    border-radius: var(--radius-full);
-    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    will-change: transform;
-}
-
-.progress-bar-fill::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    animation: shimmer 2s infinite;
-}
-
-@keyframes shimmer {
-    0% {
-        transform: translateX(-100%);
-    }
-
-    100% {
-        transform: translateX(100%);
-    }
-}
-
-.progress-percentage {
-    text-align: left;
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--primary-color);
-}
 
 /* Filter Group */
 .filter-group h3 {
@@ -851,20 +763,6 @@ ul {
     box-shadow: var(--shadow-md);
 }
 
-/* Completed State */
-.card.completed {
-    border-color: var(--success-color);
-}
-
-.card.completed::before {
-    background: linear-gradient(90deg, var(--success-color), #34d399);
-    transform: scaleX(1);
-}
-
-.card.completed .card-icon {
-    background: var(--success-color);
-    color: white;
-}
 
 /* Empty State */
 .empty-state {
@@ -3055,43 +2953,6 @@ html.font-large {
     color: var(--text-muted);
 }
 
-/* Module Progress */
-.module-progress {
-    padding: 0 1.5rem 1.5rem;
-}
-
-.module-progress-bar {
-    height: 8px;
-    background: var(--border-color);
-    border-radius: var(--radius-full);
-    overflow: hidden;
-}
-
-.module-progress-fill {
-    height: 100%;
-    border-radius: var(--radius-full);
-    transition: width 0.5s ease;
-}
-
-.module-progress-fill[style*="width: 100%"]::after {
-    animation: none;
-}
-
-.module-1 .module-progress-fill {
-    background: linear-gradient(90deg, #4f46e5, #818cf8);
-}
-
-.module-2 .module-progress-fill {
-    background: linear-gradient(90deg, #10b981, #34d399);
-}
-
-.module-3 .module-progress-fill {
-    background: linear-gradient(90deg, #f59e0b, #fbbf24);
-}
-
-.module-4 .module-progress-fill {
-    background: linear-gradient(90deg, #ec4899, #f472b6);
-}
 
 /* Content Header */
 .content-header {
@@ -3791,4 +3652,3 @@ html.font-large {
 .io-icon-wrap.write { background: #ec489920; color: #ec4899; }
 .io-info strong { display: block; margin-bottom: 0.25rem; }
 .io-info p { font-size: 0.85rem; color: var(--text-muted); margin: 0; }
-

@@ -14,10 +14,6 @@ const elements = {
     modal: document.getElementById('lessonModal'),
     modalClose: document.getElementById('modalClose'),
     modalBody: document.getElementById('modalBody'),
-    completedCount: document.getElementById('completedCount'),
-    totalCount: document.getElementById('totalCount'),
-    progressBarFill: document.getElementById('progressBarFill'),
-    progressPercentage: document.getElementById('progressPercentage'),
     modulesSection: document.getElementById('modulesSection'),
     modulesGrid: document.getElementById('modulesGrid'),
     mainContent: document.getElementById('contentWrapper') || document.getElementById('mainContent'),
@@ -45,7 +41,6 @@ const filters = {
 
 const state = {
     allData: [],
-    completedItems: JSON.parse(localStorage.getItem('completedItems')) || [],
     lastFocusedElement: null,
     searchDebounceTimer: null,
     currentModule: null,
@@ -215,8 +210,6 @@ function renderModules() {
 
     modules.forEach((mod) => {
         const moduleItems = moduleMap[mod.id] || [];
-        const completedInModule = moduleItems.filter(item => state.completedItems.includes(item.id)).length;
-        const progress = moduleItems.length > 0 ? Math.round((completedInModule / moduleItems.length) * 100) : 0;
 
         const card = document.createElement('div');
         card.className = `module-card ${mod.moduleClass}`;
@@ -242,15 +235,6 @@ function renderModules() {
                         <span class="module-stat-value">${moduleItems.length}</span>
                         <span class="module-stat-label">درس</span>
                     </div>
-                    <div class="module-stat">
-                        <span class="module-stat-value">${completedInModule}</span>
-                        <span class="module-stat-label">مكتمل</span>
-                    </div>
-                </div>
-            </div>
-            <div class="module-progress">
-                <div class="module-progress-bar">
-                    <div class="module-progress-fill" style="width: ${progress}%"></div>
                 </div>
             </div>
         `;
@@ -284,9 +268,6 @@ function selectModule(moduleId) {
         elements.moduleTitle.innerHTML = `<i class="ph ${module.icon}"></i><span>${module.name}</span>`;
     }
 
-    // Update progress for this module
-    updateModuleProgress();
-
     // Render content
     filterData();
 
@@ -313,20 +294,6 @@ function showModulesView() {
     } else {
         document.getElementById('modulesSection')?.scrollIntoView({ behavior: 'smooth' });
     }
-}
-
-function updateModuleProgress() {
-    if (!state.currentModule) return;
-
-    const moduleItems = state.allData.filter(item => item.module === state.currentModule);
-    const total = moduleItems.length;
-    const completed = moduleItems.filter(item => state.completedItems.includes(item.id)).length;
-    const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
-
-    if (elements.completedCount) elements.completedCount.textContent = completed;
-    if (elements.totalCount) elements.totalCount.textContent = total;
-    if (elements.progressBarFill) elements.progressBarFill.style.width = `${percentage}%`;
-    if (elements.progressPercentage) elements.progressPercentage.textContent = percentage;
 }
 
 function initEventListeners() {
@@ -507,9 +474,6 @@ function createCardElement(item) {
     card.className = 'card';
     card.dataset.id = item.id;
 
-    const isCompleted = state.completedItems.includes(item.id);
-    if (isCompleted) card.classList.add('completed');
-
     const typeLabel = item.type === 'lesson' ? 'درس' : 'تمرين';
     const typeClass = item.type === 'lesson' ? 'badge-lesson' : 'badge-exercise';
     const iconClass = item.type === 'lesson' ? 'ph-desktop' : 'ph-code';
@@ -521,9 +485,6 @@ function createCardElement(item) {
                  onerror="this.src='https://placehold.co/400x250/4f46e5/ffffff?text=صورة'">
             <div class="card-header-overlay">
                 <span class="badge ${typeClass}">${typeLabel}</span>
-                <div class="badge-completed" title="مكتمل">
-                    <i class="ph ph-check"></i>
-                </div>
                 <div class="card-icon">
                     <i class="ph ${iconClass}"></i>
                 </div>
@@ -556,35 +517,6 @@ function createCardElement(item) {
     `;
 
     return card;
-}
-
-function updateProgressUI() {
-    updateModuleProgress();
-}
-
-function toggleCompleted(id) {
-    const index = state.completedItems.indexOf(id);
-
-    if (index === -1) {
-        state.completedItems.push(id);
-    } else {
-        state.completedItems.splice(index, 1);
-    }
-
-    localStorage.setItem('completedItems', JSON.stringify(state.completedItems));
-    updateProgressUI();
-    renderModules(); // Update module progress display
-
-    if (state.view === 'content') {
-        filterData();
-    }
-
-    if (elements.modal?.classList.contains('active')) {
-        const modalItemId = parseInt(elements.modalBody?.dataset?.itemId || '', 10);
-        if (modalItemId === id) {
-            openModal(id);
-        }
-    }
 }
 
 function initModal() {
@@ -633,7 +565,6 @@ function openModal(id) {
     state.lastFocusedElement = document.activeElement;
     elements.modalBody.dataset.itemId = id;
 
-    const isCompleted = state.completedItems.includes(id);
     const typeLabel = item.type === 'lesson' ? 'درس' : 'تمرين';
     const typeClass = item.type === 'lesson' ? 'badge-lesson' : 'badge-exercise';
     const disabledAttr = item.isReady ? '' : 'disabled';
@@ -690,10 +621,6 @@ function openModal(id) {
             <button class="btn-secondary ${disabledClass}" type="button" ${disabledAttr}>
                 <i class="ph-fill ph-download-simple"></i>
                 تحميل الملف
-            </button>
-            <button class="btn-complete ${isCompleted ? 'active' : ''}" type="button" onclick="toggleCompleted(${id})">
-                <i class="ph-fill ${isCompleted ? 'ph-x-circle' : 'ph-check-circle'}"></i>
-                ${isCompleted ? 'إلغاء الاكتمال' : 'تحديد كمكتمل'}
             </button>
         </div>
     `;
@@ -779,32 +706,6 @@ function updateVisitorCounter() {
     counterEl.textContent = count.toLocaleString('ar');
 }
 
-// حساب النقاط والإحصائيات
-function calculateStats() {
-    const totalItems = state.allData.length;
-    const completedCount = state.completedItems.length;
-    const percentage = totalItems > 0 ? Math.round((completedCount / totalItems) * 100) : 0;
-
-    // حساب النقاط
-    let points = completedCount * 5; // 5 نقاط لكل درس مكتمل
-
-    return {
-        totalItems,
-        completedCount,
-        percentage,
-        points,
-        rank: getRank(percentage)
-    };
-}
-
-function getRank(percentage) {
-    if (percentage === 100) return { name: 'متعلم متفوق', icon: 'ph-crown', color: '#fbbf24' };
-    if (percentage >= 75) return { name: 'طالب متقدم', icon: 'ph-medal', color: '#a78bfa' };
-    if (percentage >= 50) return { name: 'طالب نشيط', icon: 'ph-trophy', color: '#34d399' };
-    if (percentage >= 25) return { name: 'مبتدئ مثابر', icon: 'ph-star', color: '#60a5fa' };
-    return { name: 'مستكشف', icon: 'ph-compass', color: '#94a3b8' };
-}
-
 // إدارة الشارات
 function showInputModal(label) {
     return new Promise((resolve) => {
@@ -835,25 +736,15 @@ function showInputModal(label) {
     });
 }
 
-window.openModal = openModal;
-window.closeModal = closeModal;
-window.toggleCompleted = toggleCompleted;
-window.showModulesView = showModulesView;
-window.selectModule = selectModule;
-window.calculateStats = calculateStats;
-window.showInputModal = showInputModal;
 // Export functions to window for inline HTML event handlers
 window.showModulesView = showModulesView;
 window.selectModule = selectModule;
 window.openModal = openModal;
 window.closeModal = closeModal;
-window.toggleCompleted = toggleCompleted;
 window.toggleTheme = toggleTheme;
 window.toggleFontSize = toggleFontSize;
 window.filterData = filterData;
 window.resetFilters = resetFilters;
-window.calculateStats = calculateStats;
 window.showInputModal = showInputModal;
 window.elements = elements;
 window.escapeHtml = escapeHtml;
-
