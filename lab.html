@@ -25,7 +25,7 @@
     <!-- Navbar -->
     <header class="navbar" id="top">
         <div class="container nav-content">
-            <a href="#" class="logo" onclick="showModulesView(); return false;">
+            <a href="#" class="logo" onclick="showModules(); return false;">
                 <i class="ph-fill ph-graduation-cap"></i>
                 <span>منصتي</span>
             </a>
@@ -449,6 +449,9 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             };
 
+            // Make it global for the onclick
+            window.showModules = showModules;
+
             const showActivity = (id, text) => {
                 const target = document.getElementById(id);
                 if (!target) return;
@@ -479,8 +482,6 @@
             });
 
             backBtn.addEventListener('click', showModules);
-
-            window.showModulesView = showModules;
 
             showModules();
             initHtmlLab(); // Initialize HTML editor

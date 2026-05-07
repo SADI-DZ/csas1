@@ -737,51 +737,6 @@ ul {
     z-index: 5;
 }
 
-.badge {
-    padding: 0.3rem 0.8rem;
-    border-radius: var(--radius-full);
-    font-size: 0.75rem;
-    font-weight: 700;
-    backdrop-filter: blur(8px);
-    box-shadow: var(--shadow-sm);
-}
-
-.badge-lesson {
-    background: rgba(99, 102, 241, 0.9);
-    color: white;
-}
-
-.badge-exercise {
-    background: rgba(245, 158, 11, 0.9);
-    color: white;
-}
-
-.badge-coming-soon {
-    background: rgba(239, 68, 68, 0.9);
-    color: white;
-}
-
-.badge-difficulty {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-}
-
-.difficulty-easy {
-    background: rgba(16, 185, 129, 0.9);
-    color: white;
-}
-
-.difficulty-medium {
-    background: rgba(245, 158, 11, 0.9);
-    color: white;
-}
-
-.difficulty-hard {
-    background: rgba(239, 68, 68, 0.9);
-    color: white;
-}
-
 .card-icon {
     font-size: 1.1rem;
     color: var(--accent-color);
@@ -911,25 +866,8 @@ ul {
     color: white;
 }
 
-.badge-completed {
     background: var(--success-color);
     color: white;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    box-shadow: var(--shadow-md);
-    opacity: 0;
-    transform: scale(0);
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.card.completed .badge-completed {
-    opacity: 1;
-    transform: scale(1);
 }
 
 /* Empty State */
@@ -3237,164 +3175,6 @@ html.font-large {
     }
 }
 
-/* ============================================
-   🎮 Gamification System (نظام النقاط والشارات)
-   ============================================ */
-
-/* شريط النقاط والرتبة */
-.gamification-bar {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 0.75rem 1.25rem;
-    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-    border-radius: var(--radius-lg);
-    color: white;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-}
-
-.gamification-bar .points-display {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 700;
-}
-
-.gamification-bar .points-display i {
-    font-size: 1.2rem;
-}
-
-.gamification-bar .rank-display {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    opacity: 0.95;
-}
-
-.gamification-bar .badges-display {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    margin-right: auto;
-}
-
-.mini-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.25);
-    border-radius: 50%;
-    font-size: 0.9rem;
-}
-
-.mini-badge i {
-    color: white;
-}
-
-.no-badges {
-    font-size: 0.8rem;
-    opacity: 0.7;
-}
-
-/* نافذة الشارات */
-.badge-notification {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%) translateY(-100px);
-    background: linear-gradient(135deg, #4f46e5, #818cf8);
-    color: white;
-    padding: 1rem 1.5rem;
-    border-radius: var(--radius-lg);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    box-shadow: 0 10px 40px rgba(79, 70, 229, 0.4);
-    z-index: 10000;
-    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    max-width: 90vw;
-}
-
-.badge-notification.show {
-    transform: translateX(-50%) translateY(0);
-}
-
-.badge-notification-icon {
-    width: 60px;
-    height: 60px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    flex-shrink: 0;
-}
-
-.badge-notification-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-
-.badge-notification-content .badge-label {
-    font-size: 0.8rem;
-    opacity: 0.85;
-}
-
-.badge-notification-content strong {
-    font-size: 1.1rem;
-}
-
-.badge-notification-content p {
-    font-size: 0.85rem;
-    opacity: 0.9;
-    margin: 0;
-}
-
-.badge-notification-content .badge-points {
-    background: rgba(255, 255, 255, 0.25);
-    padding: 0.2rem 0.6rem;
-    border-radius: var(--radius-full);
-    font-size: 0.8rem;
-    font-weight: 700;
-    align-self: flex-start;
-}
-
-.badge-close {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 0.5rem;
-    opacity: 0.7;
-    transition: opacity 0.2s;
-}
-
-.badge-close:hover {
-    opacity: 1;
-}
-
-/* شارة في البطاقة */
-.card-badge-earned {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: linear-gradient(135deg, #fbbf24, #f59e0b);
-    color: #1e293b;
-    padding: 0.25rem 0.5rem;
-    border-radius: var(--radius-full);
-    font-size: 0.7rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    box-shadow: 0 2px 8px rgba(251, 191, 36, 0.4);
-}
-
 /* نافذة الإحصائيات */
 .stats-panel {
     background: var(--surface-color);
@@ -3443,31 +3223,11 @@ html.font-large {
 }
 
 /* Dark theme adjustments */
-[data-theme="dark"] .badge-notification {
-    background: linear-gradient(135deg, #4f46e5, #6366f1);
-}
-
-[data-theme="dark"] .gamification-bar {
-    background: linear-gradient(135deg, #4f46e5, #6366f1);
-}
-
 [data-theme="dark"] .stat-card {
     background: var(--surface-color);
 }
 
 /* Responsive */
-@media (max-width: 768px) {
-    .gamification-bar {
-        flex-wrap: wrap;
-        gap: 0.75rem;
-        justify-content: center;
-    }
-
-    .gamification-bar .badges-display {
-        margin-right: 0;
-        width: 100%;
-        justify-content: center;
-    }
 
     .badge-notification {
         flex-direction: column;

@@ -101,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (elements.searchInput && savedSearch) elements.searchInput.value = savedSearch;
     const savedModule = sessionStorage.getItem('lastModule');
     if (savedModule) selectModule(savedModule);
-    updateGamificationUI();
 });
 
 
@@ -544,7 +543,6 @@ function toggleCompleted(id) {
 
     localStorage.setItem('completedItems', JSON.stringify(state.completedItems));
     updateProgressUI();
-    updateGamificationUI(); // تحديث نظام النقاط والشارات
     renderModules(); // Update module progress display
 
     if (state.view === 'content') {
@@ -751,17 +749,6 @@ function updateVisitorCounter() {
     counterEl.textContent = count.toLocaleString('ar');
 }
 
-const BADGES = {
-    FIRST_LESSON: { id: 'first_lesson', name: 'البداية', icon: 'ph-star', desc: 'أنجز أول درس', points: 10 },
-    MODULE_MASTER: { id: 'module_master', name: 'متخصص المحور', icon: 'ph-trophy', desc: 'أتمم محوراً كاملاً', points: 50 },
-    HALF_WAY: { id: 'half_way', name: 'في منتصف الطريق', icon: 'ph-medal', desc: 'أنجز 50% من المحتوى', points: 25 },
-    FULL_PLATFORM: { id: 'full_platform', name: 'متعلم كامل', icon: 'ph-crown', desc: 'أنجز جميع المحاور', points: 100 },
-    QUIZ_MASTER: { id: 'quiz_master', name: 'خبير التمارين', icon: 'ph-brain', desc: 'أنجز 5 تمارين', points: 30 },
-    EXPLORER: { id: 'explorer', name: 'مستكشف', icon: 'ph-compass', desc: 'تصفح كل المحاور', points: 15 },
-    STREAK_3: { id: 'streak_3', name: 'مثابر', icon: 'ph-fire', desc: '3 أيام متتالية', points: 20 },
-    LAB_HERO: { id: 'lab_hero', name: 'بطل المخبر', icon: 'ph-flask', desc: 'أنجز نشاط مخبري', points: 40 }
-};
-
 // حساب النقاط والإحصائيات
 function calculateStats() {
     const totalItems = state.allData.length;
@@ -770,11 +757,6 @@ function calculateStats() {
 
     // حساب النقاط
     let points = completedCount * 5; // 5 نقاط لكل درس مكتمل
-
-    // نقاط إضافية للمكافآت
-    if (completedCount >= 1) points += BADGES.FIRST_LESSON.points;
-    if (completedCount >= totalItems) points += BADGES.FULL_PLATFORM.points;
-    if (percentage >= 50) points += BADGES.HALF_WAY.points;
 
     return {
         totalItems,
@@ -794,28 +776,6 @@ function getRank(percentage) {
 }
 
 // إدارة الشارات
-function checkAndAwardBadges() {
-    const earned = JSON.parse(localStorage.getItem('earnedBadges')) || [];
-    const newBadges = [];
-    const completedCount = state.completedItems.length;
-
-    // فحص الشارات
-    if (completedCount >= 1 && !earned.includes(BADGES.FIRST_LESSON.id)) {
-        newBadges.push(BADGES.FIRST_LESSON);
-    }
-
-    // إضافة الشارات المكتسبة
-    newBadges.forEach(badge => {
-        if (!earned.includes(badge.id)) {
-            earned.push(badge.id);
-            showBadgeNotification(badge);
-        }
-    });
-
-    localStorage.setItem('earnedBadges', JSON.stringify(earned));
-    return newBadges;
-}
-
 function showInputModal(label) {
     return new Promise((resolve) => {
         const overlay = document.createElement('div');
@@ -845,68 +805,12 @@ function showInputModal(label) {
     });
 }
 
-function showBadgeNotification(badge) {
-    const notification = document.createElement('div');
-    notification.className = 'badge-notification';
-    notification.innerHTML = `
-        <div class="badge-notification-icon">
-            <i class="ph-fill ${badge.icon}"></i>
-        </div>
-        <div class="badge-notification-content">
-            <span class="badge-label">حصلت على شارة جديدة!</span>
-            <strong>${badge.name}</strong>
-            <p>${badge.desc}</p>
-            <span class="badge-points">+${badge.points} نقاط</span>
-        </div>
-        <button class="badge-close" onclick="this.parentElement.remove()">
-            <i class="ph ph-x"></i>
-        </button>
-    `;
-    document.body.appendChild(notification);
-    setTimeout(() => notification.classList.add('show'), 100);
-    setTimeout(() => notification.remove(), 5000);
-}
-
-function getEarnedBadges() {
-    const earned = JSON.parse(localStorage.getItem('earnedBadges')) || [];
-    return Object.values(BADGES).filter(b => earned.includes(b.id));
-}
-
-// تحديث عداد النقاط في الواجهة
-function updateGamificationUI() {
-    const stats = calculateStats();
-    checkAndAwardBadges();
-
-    // تحديث عناصر الواجهة
-    const pointsEl = document.getElementById('userPoints');
-    const rankEl = document.getElementById('userRank');
-    const rankLabelEl = document.getElementById('userRankLabel');
-    const badgesEl = document.getElementById('userBadges');
-
-    if (pointsEl) pointsEl.textContent = stats.points;
-    if (rankEl) {
-        rankEl.innerHTML = `<i class="ph-fill ${stats.rank.icon}"></i>`;
-    }
-    if (rankLabelEl) {
-        rankLabelEl.textContent = stats.rank.name;
-    }
-
-    // تحديث الشارات
-    if (badgesEl) {
-        const badges = getEarnedBadges();
-        badgesEl.innerHTML = badges.length > 0
-            ? badges.map(b => `<span class="mini-badge" title="${b.name}"><i class="ph-fill ${b.icon}"></i></span>`).join('')
-            : '<span class="no-badges">لا توجد شارات بعد</span>';
-    }
-}
-
 window.openModal = openModal;
 window.closeModal = closeModal;
 window.toggleCompleted = toggleCompleted;
 window.showModulesView = showModulesView;
 window.selectModule = selectModule;
 window.calculateStats = calculateStats;
-window.getEarnedBadges = getEarnedBadges;
 window.showInputModal = showInputModal;
 // Export functions to window for inline HTML event handlers
 window.showModulesView = showModulesView;
@@ -919,7 +823,6 @@ window.toggleFontSize = toggleFontSize;
 window.filterData = filterData;
 window.resetFilters = resetFilters;
 window.calculateStats = calculateStats;
-window.getEarnedBadges = getEarnedBadges;
 window.showInputModal = showInputModal;
 window.elements = elements;
 window.escapeHtml = escapeHtml;
