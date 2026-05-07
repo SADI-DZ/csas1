@@ -238,43 +238,42 @@
                         </div>
                     </div>
 
+                    <!-- Examples Section (Horizontal) -->
+                    <section class="algo-examples-top">
+                        <div class="sidebar-header">
+                            <h3><i class="ph ph-lightbulb"></i> أمثلة جاهزة</h3>
+                        </div>
+                        <div class="algo-examples-list horizontal">
+                            <button class="example-item" data-example="hello">
+                                <span class="example-icon"><i class="ph ph-chat-centered-text"></i></span>
+                                <div class="example-info">
+                                    <span class="example-name">مرحباً بالعالم</span>
+                                </div>
+                            </button>
+                            <button class="example-item" data-example="sum">
+                                <span class="example-icon"><i class="ph ph-plus-circle"></i></span>
+                                <div class="example-info">
+                                    <span class="example-name">جمع عددين</span>
+                                </div>
+                            </button>
+                            <button class="example-item" data-example="condition">
+                                <span class="example-icon"><i class="ph ph-git-fork"></i></span>
+                                <div class="example-info">
+                                    <span class="example-name">الشروط (Else If)</span>
+                                </div>
+                            </button>
+                            <button class="example-item" data-example="loop">
+                                <span class="example-icon"><i class="ph ph-arrows-clockwise"></i></span>
+                                <div class="example-info">
+                                    <span class="example-name">حلقة تكرارية (For)</span>
+                                </div>
+                            </button>
+                        </div>
+                    </section>
+
                     <div class="lab-grid algo-grid">
-                        <aside class="algo-sidebar">
-                            <div class="sidebar-header">
-                                <h3><i class="ph ph-lightbulb"></i> أمثلة جاهزة</h3>
-                            </div>
-                            <div class="algo-examples-list">
-                                <button class="example-item" data-example="hello">
-                                    <span class="example-icon"><i class="ph ph-chat-centered-text"></i></span>
-                                    <div class="example-info">
-                                        <span class="example-name">مرحباً بالعالم</span>
-                                        <span class="example-desc">أبسط خوارزمية للطباعة</span>
-                                    </div>
-                                </button>
-                                <button class="example-item" data-example="sum">
-                                    <span class="example-icon"><i class="ph ph-plus-circle"></i></span>
-                                    <div class="example-info">
-                                        <span class="example-name">جمع عددين</span>
-                                        <span class="example-desc">استخدام المتغيرات والجمع</span>
-                                    </div>
-                                </button>
-                                <button class="example-item" data-example="condition">
-                                    <span class="example-icon"><i class="ph ph-git-fork"></i></span>
-                                    <div class="example-info">
-                                        <span class="example-name">الشروط (Else If)</span>
-                                        <span class="example-desc">التحقق من الدرجة</span>
-                                    </div>
-                                </button>
-                                <button class="example-item" data-example="loop">
-                                    <span class="example-icon"><i class="ph ph-arrows-clockwise"></i></span>
-                                    <div class="example-info">
-                                        <span class="example-name">حلقة تكرارية (For)</span>
-                                        <span class="example-desc">طباعة الأعداد من 1 إلى 5</span>
-                                    </div>
-                                </button>
-                            </div>
-                        </aside>
-                        <article class="lab-card">
+                        <!-- Right Side: IDE (Editor) -->
+                        <article class="lab-card algo-editor-card">
                             <div class="lab-card-header">
                                 <h3><i class="ph ph-pencil-line"></i> محرر الخوارزمية</h3>
                                 <div class="algo-lang-toggle" id="algoLangToggle">
@@ -306,10 +305,10 @@
                             </p>
                         </article>
 
-                        <article class="lab-card">
+                        <!-- Left Side: Trace & Output -->
+                        <article class="lab-card algo-results-card">
                             <div class="lab-card-header">
                                 <h3><i class="ph ph-graph"></i> التتبع والنتائج</h3>
-                                <span class="lab-note">المتغيرات + الإخراج</span>
                             </div>
 
                             <div class="algo-panels">
@@ -351,15 +350,146 @@
                     </div>
                 </div>
 
+
                 <div class="lab-activity" id="activity-flowcharts" hidden>
-                    <div class="future-lab-grid">
-                        <article class="future-lab-card">
-                            <h3><i class="ph ph-git-branch"></i> تصميم المخططات الانسيابية</h3>
-                            <p>هذا القسم قيد التطوير وسيتم إضافته قريباً.</p>
-                            <span class="badge badge-coming-soon">قريبا</span>
-                        </article>
+                    <!-- Main Flowchart Workspace -->
+                    <div class="flow-ide-layout">
+                        
+                        <!-- Left Sidebar: Trace & Output -->
+                        <aside class="flow-results-sidebar">
+                            <article class="flow-sidebar-card">
+                                <div class="card-header">
+                                    <i class="ph-fill ph-activity"></i>
+                                    <span>التتبع والنتائج</span>
+                                </div>
+                                <div class="card-body">
+                                    <h4 class="palette-title" style="text-align: right; margin-bottom: 0.5rem;">المتغيرات</h4>
+                                    <table class="flow-table">
+                                        <thead>
+                                            <tr>
+                                                <th>الاسم</th>
+                                                <th>القيمة</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="flowVarsBody">
+                                            <tr><td colspan="2" style="text-align:center; color:var(--flow-text-muted); padding: 1rem;">لا توجد متغيرات بعد</td></tr>
+                                        </tbody>
+                                    </table>
+
+                                    <h4 class="palette-title" style="text-align: right; margin: 1.5rem 0 0.5rem;">الإخراج</h4>
+                                    <pre id="flowOutput" class="algo-output" style="height: 200px; background: rgba(0,0,0,0.2); border: 1px solid var(--flow-border); border-radius: 8px; font-size: 0.85rem; padding: 0.75rem; color: #10b981;"></pre>
+                                </div>
+                            </article>
+
+                            <article class="flow-sidebar-card" id="flowProperties" hidden>
+                                <div class="card-header">
+                                    <i class="ph-fill ph-sliders"></i>
+                                    <span>الخصائص</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="prop-field">
+                                        <label style="display:block; font-size:0.8rem; margin-bottom:0.4rem;">النص:</label>
+                                        <input type="text" id="nodeTextInput" class="algo-input" style="width:100%; background:var(--flow-surface); border:1px solid var(--flow-border); color:white; padding:0.5rem; border-radius:4px;">
+                                    </div>
+                                    <button class="flow-btn" id="deleteNodeBtn" style="width:100%; color:var(--flow-danger); margin-top:0.5rem; justify-content:center;">
+                                        <i class="ph ph-trash"></i> حذف العنصر
+                                    </button>
+                                </div>
+                            </article>
+                        </aside>
+
+                        <!-- Right Workspace -->
+                        <main class="flow-main-workspace">
+                            
+                            <!-- Top Toolbar -->
+                            <header class="flow-toolbar">
+                                <div class="flow-toolbar-actions">
+                                    <div class="flow-lang-toggle">
+                                        <button class="lang-btn" data-lang="fr">FR</button>
+                                        <button class="lang-btn active" data-lang="en">EN</button>
+                                    </div>
+                                    <button id="flowExportBtn" class="flow-btn"><i class="ph ph-export"></i> تصدير</button>
+                                    <button id="flowSaveBtn" class="flow-btn"><i class="ph ph-floppy-disk"></i> حفظ</button>
+                                </div>
+
+                                <div class="flow-toolbar-actions">
+                                    <button id="flowRunBtn" class="flow-btn flow-btn-primary"><i class="ph-fill ph-play"></i> تشغيل</button>
+                                    <button id="flowStepBtn" class="flow-btn"><i class="ph ph-step-forward"></i> خطوة</button>
+                                    <button id="flowClearBtn" class="flow-btn" style="color:var(--flow-danger);"><i class="ph ph-arrow-counter-clockwise"></i> إعادة</button>
+                                </div>
+
+                                <h2 class="flow-toolbar-title">مصمم المخططات الانسيابية</h2>
+                            </header>
+
+                            <!-- Canvas Container -->
+                            <div class="flow-canvas-container">
+                                <!-- Shapes Palette (Floating) -->
+                                <aside class="flow-shapes-palette">
+                                    <h3 class="palette-title">الأشكال</h3>
+                                    <div class="shapes-list">
+                                        <button class="shape-tool" data-shape="start">
+                                            <div class="shape-preview oval"></div>
+                                            <span class="shape-label">بداية / نهاية</span>
+                                        </button>
+                                        <button class="shape-tool" data-shape="process">
+                                            <div class="shape-preview rect"></div>
+                                            <span class="shape-label">عملية</span>
+                                        </button>
+                                        <button class="shape-tool" data-shape="io">
+                                            <div class="shape-preview parallelogram"></div>
+                                            <span class="shape-label">إدخال / إخراج</span>
+                                        </button>
+                                        <button class="shape-tool" data-shape="decision">
+                                            <div class="shape-preview diamond"></div>
+                                            <span class="shape-label">قرار</span>
+                                        </button>
+                                        <button class="shape-tool" data-shape="connector">
+                                            <div class="shape-preview circle"></div>
+                                            <span class="shape-label">موصل</span>
+                                        </button>
+                                        <button class="shape-tool" data-shape="comment">
+                                            <div class="shape-preview comment"></div>
+                                            <span class="shape-label">تعليق</span>
+                                        </button>
+                                        <button class="shape-tool" data-shape="group">
+                                            <div class="shape-preview group"></div>
+                                            <span class="shape-label">مجموعة</span>
+                                        </button>
+                                    </div>
+                                </aside>
+
+                                <!-- Zoom Controls (Floating) -->
+                                <div class="flow-zoom-controls">
+                                    <button id="flowHandTool" class="zoom-btn" title="أداة اليد"><i class="ph ph-hand-grabbing"></i></button>
+                                    <button id="flowZoomOut" class="zoom-btn"><i class="ph ph-minus"></i></button>
+                                    <span class="zoom-value" id="flowZoomInfo">100%</span>
+                                    <button id="flowZoomIn" class="zoom-btn"><i class="ph ph-plus"></i></button>
+                                    <button id="flowZoomReset" class="zoom-btn"><i class="ph ph-frame-corners"></i></button>
+                                </div>
+
+                                <!-- Actual Canvas -->
+                                <div class="flow-canvas-wrap" id="flowCanvasWrap">
+                                    <svg id="flowCanvas" class="flow-canvas" width="3000" height="3000">
+                                        <defs>
+                                            <pattern id="flowGridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
+                                                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                                                <circle cx="0" cy="0" r="1" fill="rgba(255,255,255,0.1)" />
+                                            </pattern>
+                                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                                <polygon points="0 0, 10 3.5, 0 7" />
+                                            </marker>
+                                        </defs>
+                                        <rect width="100%" height="100%" fill="url(#flowGridPattern)" />
+                                        <g id="flowConnectionsGroup"></g>
+                                        <g id="flowNodesGroup"></g>
+                                        <g id="flowTempGroup"></g>
+                                    </svg>
+                                </div>
+                            </div>
+                        </main>
                     </div>
                 </div>
+
 
                 <!-- نشاط محاكي الويندوز -->
                 <div class="lab-activity" id="activity-simulator" hidden>
@@ -459,6 +589,7 @@
     <script src="js/main.js" defer></script>
     <script src="js/html-editor.js" defer></script>
     <script src="js/algo-lab.js" defer></script>
+    <script src="js/flowchart-lab.js" defer></script>
     <script defer>
         document.addEventListener('DOMContentLoaded', () => {
             const modulesSection = document.getElementById('labModulesSection');

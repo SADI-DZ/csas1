@@ -1396,46 +1396,50 @@ ul {
 /* ============================================
    🧠 Algorithm Lab - محرر الخوارزميات
    ============================================ */
+.algo-examples-top {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.algo-examples-top .sidebar-header h3 {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.algo-examples-list.horizontal {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.algo-examples-list.horizontal .example-item {
+    padding: 0.75rem 1rem;
+}
+
 .algo-grid {
     display: grid;
-    grid-template-columns: 280px 1fr 300px;
+    grid-template-columns: 1fr 380px;
     gap: 1.5rem;
     align-items: start;
 }
 
 @media (max-width: 1200px) {
     .algo-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-    .algo-sidebar {
-        grid-column: span 2;
-    }
-    .algo-examples-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 1rem;
+        grid-template-columns: 1fr 320px;
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     .algo-grid {
         grid-template-columns: 1fr;
     }
-    .algo-sidebar {
-        grid-column: span 1;
-    }
 }
 
-/* Sidebar Styles */
-.algo-sidebar {
-    background: var(--surface-color);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-xl);
-    padding: 1.5rem;
-    box-shadow: var(--shadow-md);
-    position: sticky;
-    top: 90px;
-}
+
 
 .sidebar-header h3 {
     font-size: 1.1rem;
@@ -3756,3 +3760,881 @@ html.font-large {
 .io-icon-wrap.write { background: #ec489920; color: #ec4899; }
 .io-info strong { display: block; margin-bottom: 0.25rem; }
 .io-info p { font-size: 0.85rem; color: var(--text-muted); margin: 0; }
+/* ============================================
+   ?? Flowchart Designer Styles
+   ============================================ */
+.flowchart-toolbox {
+    background: var(--surface-color);
+    padding: 1.5rem;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-md);
+}
+
+.flowchart-tools-list {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0;
+    overflow-x: auto;
+}
+
+.flowchart-tools-list.horizontal {
+    flex-wrap: wrap;
+}
+
+.tool-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: var(--bg-color);
+    border: 2px solid transparent;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: var(--transition);
+    min-width: 100px;
+    color: var(--text-main);
+}
+
+.tool-item:hover {
+    background: var(--surface-color);
+    border-color: var(--primary-light);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.tool-item.is-active {
+    border-color: var(--primary-color);
+    background: rgba(79, 70, 229, 0.05);
+}
+
+.tool-icon {
+    font-size: 1.5rem;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    background: var(--surface-color);
+    box-shadow: var(--shadow-sm);
+    color: var(--primary-color);
+}
+
+/* ============================================
+   📐 Flowchart Lab Premium Design System
+   ============================================ */
+
+:root {
+    --flow-bg: #0b0f19;
+    --flow-panel: #161b2b;
+    --flow-surface: #1e293b;
+    --flow-border: rgba(255, 255, 255, 0.08);
+    --flow-text: #f8fafc;
+    --flow-text-muted: #94a3b8;
+    
+    --flow-primary: #3b82f6;
+    --flow-success: #10b981;
+    --flow-warning: #eab308;
+    --flow-danger: #ef4444;
+    --flow-purple: #a855f7;
+    
+    --flow-glow-primary: rgba(59, 130, 246, 0.5);
+    --flow-glow-success: rgba(16, 185, 129, 0.5);
+}
+
+#activity-flowcharts {
+    background: var(--flow-bg) !important;
+    color: var(--flow-text) !important;
+    padding: 2rem 0;
+    border-radius: var(--radius-xl);
+}
+
+
+.flow-ide-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 1.5rem;
+    height: 800px;
+    background: var(--flow-bg);
+    padding: 1.5rem;
+    border-radius: var(--radius-xl);
+    color: var(--flow-text);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+    direction: ltr; /* Force LTR for layout positioning */
+}
+
+/* Sidebar - Left */
+.flow-results-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    height: 100%;
+    direction: rtl; /* Content inside should be RTL */
+}
+
+.flow-sidebar-card {
+    background: var(--flow-panel);
+    border: 1px solid var(--flow-border);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.flow-sidebar-card .card-header {
+    padding: 1rem 1.25rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid var(--flow-border);
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: white;
+}
+
+.flow-sidebar-card .card-body {
+    padding: 1rem;
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Main Workspace - Center/Right */
+.flow-main-workspace {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+    position: relative;
+    direction: rtl; /* Toolbars and titles should be RTL */
+}
+
+/* Toolbar - Top */
+.flow-toolbar {
+    background: var(--flow-panel);
+    border: 1px solid var(--flow-border);
+    border-radius: var(--radius-lg);
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(10px);
+}
+
+.flow-toolbar-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: white;
+    margin: 0;
+}
+
+.flow-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Toolbar Buttons */
+.flow-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--flow-border);
+    color: var(--flow-text);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition-fast);
+}
+
+.flow-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+.flow-btn-primary {
+    background: var(--flow-success);
+    color: #0b0f19;
+    border-color: var(--flow-success);
+}
+
+.flow-btn-primary:hover {
+    background: #0ea271;
+    box-shadow: 0 0 15px var(--flow-glow-success);
+}
+
+/* Canvas Area */
+.flow-canvas-container {
+    flex: 1;
+    position: relative;
+    background: var(--flow-panel);
+    border: 1px solid var(--flow-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    direction: ltr; /* Canvas coordinates are LTR */
+}
+
+
+.flow-canvas-wrap {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    cursor: grab;
+}
+
+.flow-canvas-wrap:active {
+    cursor: grabbing;
+}
+
+.flow-canvas {
+    display: block;
+    background-color: transparent;
+}
+
+/* Floating Shapes Palette */
+.flow-shapes-palette {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: rgba(22, 27, 43, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--flow-border);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    width: 180px;
+    z-index: 10;
+    box-shadow: var(--shadow-lg);
+}
+
+.palette-title {
+    font-size: 0.85rem;
+    color: var(--flow-text-muted);
+    margin-bottom: 0.75rem;
+    text-align: center;
+    font-weight: 700;
+}
+
+.shapes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.shape-tool {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--flow-text);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.shape-tool:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--flow-border);
+}
+
+.shape-preview {
+    width: 32px;
+    height: 20px;
+    border: 2px solid var(--flow-primary);
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.shape-preview.oval { border-radius: 10px; border-color: var(--flow-success); }
+.shape-preview.rect { border-color: var(--flow-primary); }
+.shape-preview.parallelogram { transform: skewX(-15deg); border-color: var(--flow-purple); }
+.shape-preview.diamond { width: 20px; height: 20px; transform: rotate(45deg); border-color: var(--flow-warning); margin: 0 6px; }
+.shape-preview.circle { width: 20px; height: 20px; border-radius: 50%; border-color: var(--flow-danger); margin: 0 6px; }
+.shape-preview.comment { border-style: dashed; border-color: var(--flow-text-muted); }
+.shape-preview.group { border-style: dashed; border-color: var(--flow-primary); }
+
+.shape-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-align: right;
+    flex: 1;
+}
+
+/* Zoom Controls */
+.flow-zoom-controls {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    background: rgba(22, 27, 43, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--flow-border);
+    border-radius: var(--radius-full);
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 10;
+}
+
+.zoom-btn {
+    background: transparent;
+    border: none;
+    color: var(--flow-text);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+}
+
+.zoom-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.zoom-value {
+    font-size: 0.85rem;
+    font-weight: 700;
+    min-width: 45px;
+    text-align: center;
+}
+
+/* SVG Node Styles */
+.flow-node {
+    cursor: grab;
+}
+
+.flow-node:active {
+    cursor: grabbing;
+}
+
+.flow-node rect, .flow-node ellipse, .flow-node polygon, .flow-node circle {
+    stroke-width: 2;
+    transition: filter var(--transition-fast);
+}
+
+.flow-node.is-selected rect, .flow-node.is-selected ellipse, .flow-node.is-selected polygon, .flow-node.is-selected circle {
+    filter: drop-shadow(0 0 8px var(--flow-glow-primary));
+    stroke-width: 3;
+}
+
+.flow-node text {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    fill: white;
+    pointer-events: none;
+    text-anchor: middle;
+}
+
+/* Node Colors */
+.node-start rect, .node-end rect { stroke: var(--flow-success); fill: rgba(16, 185, 129, 0.1); }
+.node-process rect { stroke: var(--flow-primary); fill: rgba(59, 130, 246, 0.1); }
+.node-io polygon { stroke: var(--flow-purple); fill: rgba(168, 85, 247, 0.1); }
+.node-decision polygon { stroke: var(--flow-warning); fill: rgba(234, 179, 8, 0.1); }
+.node-connector circle { stroke: var(--flow-danger); fill: rgba(239, 68, 68, 0.1); }
+.node-comment rect { stroke: var(--flow-text-muted); fill: rgba(255, 255, 255, 0.05); stroke-dasharray: 5,5; }
+
+/* Language Toggle */
+.flow-lang-toggle {
+    display: flex;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.25rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--flow-border);
+}
+
+.lang-btn {
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 800;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--flow-text-muted);
+}
+
+.lang-btn.active {
+    background: var(--flow-primary);
+    color: #fff;
+    box-shadow: 0 0 10px var(--flow-glow-primary);
+}
+
+/* Table in Sidebar */
+.flow-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.flow-table th {
+    text-align: right;
+    font-size: 0.85rem;
+    color: var(--flow-text-muted);
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--flow-border);
+}
+
+.flow-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    color: white;
+}
+
+/* Edge Colors */
+.flow-edge {
+    stroke: var(--flow-text-muted);
+    stroke-width: 2;
+    fill: none;
+    marker-end: url(#arrowhead);
+    transition: var(--transition-fast);
+}
+
+.flow-edge:hover {
+    stroke: var(--flow-primary);
+    stroke-width: 3;
+}
+
+/* Markers */
+#arrowhead polygon {
+    fill: var(--flow-text-muted);
+}
+
+/* Anchor Points */
+.anchor-point {
+    fill: white;
+    stroke: var(--flow-primary);
+    stroke-width: 1.5;
+    cursor: crosshair;
+    opacity: 0;
+}
+
+.flow-node:hover .anchor-point, .anchor-point:hover {
+    opacity: 1;
+}
+
+@media (max-width: 1024px) {
+    .flow-ide-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+}
+
+
+
+/* ============================================
+   🔀 Flowchart Designer - مصمم المخططات الانسيابية
+   ============================================ */
+
+.flow-ide-layout {
+    display: flex;
+    flex-direction: row;
+    height: 700px;
+    gap: 1rem;
+    margin-top: 1rem;
+    font-family: inherit;
+}
+
+@media (max-width: 992px) {
+    .flow-ide-layout {
+        flex-direction: column-reverse;
+        height: auto;
+    }
+}
+
+/* Sidebar */
+.flow-results-sidebar {
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.flow-sidebar-card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.flow-sidebar-card .card-header {
+    background: var(--bg-color);
+    padding: 0.75rem 1rem;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary-color);
+}
+
+.flow-sidebar-card .card-body {
+    padding: 1rem;
+    flex: 1;
+}
+
+.flow-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+.flow-table th {
+    text-align: right;
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-muted);
+}
+.flow-table td {
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Main Workspace */
+.flow-main-workspace {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    position: relative;
+}
+
+/* Toolbar */
+.flow-toolbar {
+    height: 60px;
+    background: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+}
+
+.flow-toolbar-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.flow-toolbar-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.flow-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background: var(--surface-color);
+    color: var(--text-main);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.flow-btn:hover {
+    background: var(--bg-color);
+    border-color: var(--primary-light);
+}
+
+.flow-btn-primary {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.flow-btn-primary:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: white;
+}
+
+.flow-lang-toggle {
+    display: flex;
+    background: var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 2px;
+}
+
+.flow-lang-toggle .lang-btn {
+    padding: 0.3rem 0.6rem;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.flow-lang-toggle .lang-btn.active {
+    background: var(--surface-color);
+    color: var(--primary-color);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Canvas Container & Palette */
+.flow-canvas-container {
+    flex: 1;
+    position: relative;
+    display: flex;
+    overflow: hidden;
+}
+
+.flow-shapes-palette {
+    width: 90px;
+    background: var(--bg-color);
+    border-left: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0;
+    z-index: 10;
+    overflow-y: auto;
+}
+
+.palette-title {
+    font-size: 0.8rem;
+    text-align: center;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.shapes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+.shape-tool {
+    background: transparent;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+    width: 70px;
+}
+
+.shape-tool:hover {
+    background: var(--surface-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.shape-preview {
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--primary-color);
+    background: rgba(79, 70, 229, 0.1);
+}
+
+.shape-preview.oval { border-radius: 50%; }
+.shape-preview.rect { border-radius: 4px; }
+.shape-preview.diamond { transform: rotate(45deg) scale(0.7); }
+.shape-preview.parallelogram { transform: skew(-15deg); }
+.shape-preview.circle { border-radius: 50%; width: 24px; height: 24px; }
+.shape-preview.comment { border-style: dashed; }
+.shape-preview.group { border: 1px solid var(--text-muted); background: transparent; }
+
+.shape-label {
+    font-size: 0.65rem;
+    color: var(--text-main);
+    text-align: center;
+}
+
+/* Canvas */
+.flow-canvas-wrap {
+    flex: 1;
+    overflow: auto;
+    cursor: grab;
+    background: var(--bg-color);
+    position: relative;
+}
+
+.flow-canvas-wrap:active {
+    cursor: grabbing;
+}
+
+.flow-canvas {
+    display: block;
+    transform-origin: 0 0;
+}
+
+/* Nodes & Edges SVG Styling */
+.flow-node rect,
+.flow-node polygon,
+.flow-node circle {
+    fill: var(--surface-color);
+    stroke: var(--primary-color);
+    stroke-width: 2;
+    transition: stroke 0.2s, filter 0.2s;
+}
+
+.flow-node text {
+    fill: var(--text-main);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-anchor: middle;
+    pointer-events: none;
+    dominant-baseline: middle;
+}
+
+.flow-node:hover rect,
+.flow-node:hover polygon,
+.flow-node:hover circle {
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    stroke: var(--primary-light);
+}
+
+.flow-node.is-selected rect,
+.flow-node.is-selected polygon,
+.flow-node.is-selected circle {
+    stroke: var(--accent-secondary);
+    stroke-width: 3;
+    filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.4));
+}
+
+/* Node specific colors based on type */
+.flow-node.node-start rect, .flow-node.node-end rect {
+    fill: #e0f2fe;
+    stroke: #0284c7;
+}
+[data-theme="dark"] .flow-node.node-start rect, [data-theme="dark"] .flow-node.node-end rect {
+    fill: #0c4a6e;
+    stroke: #38bdf8;
+}
+
+.flow-node.node-process rect {
+    fill: #f0fdf4;
+    stroke: #16a34a;
+}
+[data-theme="dark"] .flow-node.node-process rect {
+    fill: #14532d;
+    stroke: #4ade80;
+}
+
+.flow-node.node-decision polygon {
+    fill: #fefce8;
+    stroke: #ca8a04;
+}
+[data-theme="dark"] .flow-node.node-decision polygon {
+    fill: #713f12;
+    stroke: #facc15;
+}
+
+.flow-node.node-io polygon {
+    fill: #fdf4ff;
+    stroke: #c026d3;
+}
+[data-theme="dark"] .flow-node.node-io polygon {
+    fill: #701a75;
+    stroke: #e879f9;
+}
+
+.flow-node.node-comment rect {
+    fill: transparent;
+    stroke: var(--text-muted);
+    stroke-dasharray: 5,5;
+}
+
+.flow-node.node-connector circle {
+    fill: var(--bg-color);
+    stroke: var(--text-muted);
+}
+
+.anchor-point {
+    fill: white;
+    stroke: var(--accent-secondary);
+    stroke-width: 2;
+    opacity: 0;
+    transition: opacity 0.2s;
+    cursor: crosshair;
+}
+
+.flow-node:hover .anchor-point,
+.flow-node.is-selected .anchor-point {
+    opacity: 1;
+}
+
+.flow-edge {
+    fill: none;
+    stroke: var(--text-main);
+    stroke-width: 2;
+    marker-end: url(#arrowhead);
+    transition: stroke 0.2s;
+}
+
+.flow-edge:hover {
+    stroke: var(--accent-secondary);
+    stroke-width: 3;
+}
+
+/* Zoom Controls */
+.flow-zoom-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    padding: 0.3rem 0.5rem;
+    gap: 0.5rem;
+    box-shadow: var(--shadow-md);
+    z-index: 10;
+}
+
+.zoom-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.zoom-btn:hover {
+    background: var(--bg-color);
+    color: var(--primary-color);
+}
+
+.zoom-value {
+    font-size: 0.85rem;
+    font-weight: 700;
+    min-width: 40px;
+    text-align: center;
+}
